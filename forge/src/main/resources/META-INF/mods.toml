@@ -1,0 +1,25 @@
+modLoader = "kotlinforforge"
+loaderVersion = "[3,)"
+license = "MPL-2.0"
+issueTrackerURL = "https://github.com/hiirosakura/cookie/issues"
+
+[[mods]]
+modId = "cookie"
+version = "${version}"
+displayName = "Cookie"
+description = "可能是个前置,大概会提供配置、界面之类的功能。"
+authors = "forpeluvoir"
+logoFile = "icon.png"
+displayURL = "https://github.com/hiirosakura/cookie"
+side = "CLIENT"
+
+[[dependencies.cookie]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.18,)"
+
+[[dependencies.cookie]]
+modId = "forge"
+mandatory = true
+versionRange = "[39,)"
+

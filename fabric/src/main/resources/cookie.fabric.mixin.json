@@ -1,0 +1,12 @@
+{
+  "compatibilityLevel": "JAVA_17",
+  "minVersion": "0.8",
+  "package": "org.hiirosakura.cookie.fabric.mixin",
+  "required": true,
+  "mixins": [
+    "MixinMinecraftClient"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
