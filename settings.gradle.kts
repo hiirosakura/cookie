@@ -5,9 +5,9 @@ include("forge")
 
 pluginManagement {
 	repositories {
-		maven { setUrl("https://maven.fabricmc.net/") }
-		maven { setUrl("https://maven.architectury.dev/") }
-		maven { setUrl("https://files.minecraftforge.net/maven/") }
+		maven("https://maven.fabricmc.net/")
+		maven("https://maven.architectury.dev/")
+		maven("https://files.minecraftforge.net/maven/")
 		gradlePluginPortal()
 	}
 }

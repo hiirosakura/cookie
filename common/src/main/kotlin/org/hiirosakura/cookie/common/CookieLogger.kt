@@ -1,6 +1,6 @@
 package org.hiirosakura.cookie.common
 
-import org.hiirosakura.cookie.mod.cookieMod
+import org.hiirosakura.cookie.mod.Cookie
 
 /**
  *
@@ -16,7 +16,7 @@ import org.hiirosakura.cookie.mod.cookieMod
  * @author forpleuvoir
 
  */
-class CookieLogger(clazz: Class<*>) : ModLogger(clazz, cookieMod) {
+class CookieLogger(clazz: Class<*>) : ModLogger(clazz, Cookie) {
 
 	companion object {
 

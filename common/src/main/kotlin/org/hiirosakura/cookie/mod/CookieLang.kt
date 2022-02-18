@@ -1,6 +1,7 @@
 package org.hiirosakura.cookie.mod
 
 import org.hiirosakura.cookie.common.ModLang
+import org.hiirosakura.cookie.platform.MultiPlatformFun
 
 /**
  *
@@ -50,5 +51,5 @@ enum class CookieLang(override val key: String) : ModLang {
 	;
 
 	override val modId: String
-		get() = cookieMod.id
+		get() = Cookie.id
 }

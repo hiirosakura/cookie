@@ -1,7 +1,7 @@
 package org.hiirosakura.cookie.config.options
 
 import org.hiirosakura.cookie.common.Option
-import org.hiirosakura.cookie.common.Toggleable
+import org.hiirosakura.cookie.common.Switchable
 import org.hiirosakura.cookie.config.Config
 
 /**
@@ -18,9 +18,9 @@ import org.hiirosakura.cookie.config.Config
  * @author forpleuvoir
 
  */
-interface IConfigOptions : Config<Option>, Toggleable {
+interface IConfigOptions : Config<Option>, Switchable {
 
-	override fun toggle() {
+	override fun switch() {
 		this.setValue(this.getValue().cycle())
 	}
 }

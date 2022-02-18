@@ -2,7 +2,6 @@ package org.hiirosakura.cookie.config
 
 import net.minecraft.text.Text
 import org.hiirosakura.cookie.common.*
-import org.hiirosakura.cookie.config.options.ConfigValue
 
 /**
  *
