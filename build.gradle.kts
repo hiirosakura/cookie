@@ -9,10 +9,15 @@ plugins {
 	id("dev.architectury.loom") version "0.10.0-SNAPSHOT" apply false
 	kotlin("jvm") version "1.6.10"
 	id("com.github.johnrengelman.shadow") version "7.0.0" apply false
+	id("maven-publish")
 }
 
 architectury {
 	minecraft = rootProject.properties["minecraft_version"].toString()
+}
+
+fun String.captureName(): String {
+	return this.substring(0, 1).toUpperCase() + this.substring(1)
 }
 
 subprojects {
@@ -24,7 +29,7 @@ subprojects {
 
 
 	val time = SimpleDateFormat("yyyyMMdd").format(Date())
-	version = "${rootProject.properties["mod_version"]}-build.$time"
+	version = "${rootProject.properties["mod_version"]}-build.$time+${rootProject.properties["minecraft_version"]}"
 	group = rootProject.properties["maven_group"].toString()
 
 	extensions.configure<JavaPluginExtension> {
@@ -33,7 +38,13 @@ subprojects {
 	}
 
 	repositories {
-		maven { setUrl("https://maven.architectury.dev/") }
+		maven("https://maven.architectury.dev/")
+		maven {
+			url = uri("https://maven.saps.dev/minecraft")
+			content {
+				includeGroup("dev.latvian.mods")
+			}
+		}
 		mavenCentral()
 		mavenLocal()
 	}
@@ -57,29 +68,75 @@ subprojects {
 			from(rootProject.file("LICENSE"))
 		}
 	}
+
+
 }
 
 subprojects {
 	if (path != ":common") {
 		apply(plugin = "com.github.johnrengelman.shadow")
-		val bundle by configurations.creating {
-			isCanBeConsumed = false
-			isCanBeResolved = true
-		}
+		val shadowCommon by configurations.creating
 		tasks {
 			"jar"(Jar::class) {
 				archiveClassifier.set("dev-slim")
 			}
 
 			"shadowJar"(ShadowJar::class) {
+				this.configurations = listOf(shadowCommon)
 				archiveClassifier.set("dev-shadow")
-				configurations = listOf(bundle)
 			}
 
 			"remapJar"(RemapJarTask::class) {
 				dependsOn("shadowJar")
+				classes
 				input.set(named<ShadowJar>("shadowJar").flatMap { it.archiveFile })
 				archiveClassifier.set(project.name)
+			}
+		}
+
+		val sourcesJar by tasks.registering(Jar::class) {
+			dependsOn(tasks.classes)
+			archiveClassifier.set("sources")
+			from(sourceSets.main.get().allSource, parent!!.allprojects.find { it.path == ":common" }!!.sourceSets["main"].allSource)
+		}
+
+		publishing {
+			publications {
+				create<MavenPublication>("maven${project.name.captureName()}") {
+					artifactId = "${rootProject.properties["mod_id"].toString()}-${project.name}"
+					val remap = tasks.named<RemapJarTask>("remapJar")
+					artifact(remap.flatMap { it.archiveFile }) {
+						builtBy(remap)
+						version = rootProject.properties["mod_version"].toString()
+					}
+					artifact(sourcesJar.flatMap { it.archiveFile }) {
+						builtBy(sourcesJar)
+						version = rootProject.properties["mod_version"].toString()
+						classifier = "sources"
+					}
+					pom {
+						name.set("Cookie-${project.name.captureName()}")
+						description.set("A minecraft library client mod")
+						url.set("https://github.com/hiirosakura/cookie")
+						developers {
+							developer {
+								id.set("forpleuvoir")
+								name.set("forpleuvoir")
+								email.set("695801070@qq.com")
+							}
+						}
+					}
+				}
+				repositories {
+					maven {
+						name = "GitHubPackages"
+						url = uri("https://maven.pkg.github.com/hiirosakura/cookie")
+						credentials {
+							username = System.getenv("GITHUB_USERNAME")
+							password = System.getenv("GITHUB_TOKEN")
+						}
+					}
+				}
 			}
 		}
 	}

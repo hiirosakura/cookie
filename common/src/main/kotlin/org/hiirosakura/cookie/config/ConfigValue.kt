@@ -1,11 +1,11 @@
-package org.hiirosakura.cookie.config.options
+package org.hiirosakura.cookie.config
 
 /**
  *
 
  * 项目名 cookie
 
- * 包名 org.hiirosakura.cookie.config.options
+ * 包名 org.hiirosakura.cookie.config
 
  * 文件名 ConfigValue
 

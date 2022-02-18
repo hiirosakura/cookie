@@ -1,6 +1,7 @@
 package org.hiirosakura.cookie.mixin;
 
 import net.minecraft.client.MinecraftClient;
+import org.hiirosakura.cookie.initialize._InitializeKt;
 import org.hiirosakura.cookie.input.InputHandler;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -25,4 +26,15 @@ public abstract class MixinMinecraftClient {
 	public void tickEnd(CallbackInfo ci) {
 		InputHandler.INSTANCE.tick();
 	}
+
+	@Inject(method = "<init>", at = @At(value = "RETURN"))
+	public void init(CallbackInfo ci) {
+		_InitializeKt.initialing();
+	}
+
+	@Inject(method = "run", at = @At("HEAD"))
+	public void run(CallbackInfo ci) {
+		_InitializeKt.initialized();
+	}
+
 }

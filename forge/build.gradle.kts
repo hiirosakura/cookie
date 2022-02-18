@@ -3,7 +3,7 @@ architectury {
 	forge()
 }
 
-base.archivesName.set("${rootProject.properties["archives_base_name"].toString()}-forge")
+base.archivesName.set(rootProject.properties["archives_base_name"].toString())
 
 repositories {
 	maven("https://thedarkcolour.github.io/KotlinForForge/")
@@ -11,7 +11,7 @@ repositories {
 
 loom {
 	forge {
-		mixinConfigs("cookie.common.mixin.json", "cookie.forge.mixin.json")
+		mixinConfigs("cookie.forge.mixin.json", "cookie.common.mixin.json")
 	}
 }
 
@@ -20,14 +20,13 @@ dependencies {
 	implementation("thedarkcolour:kotlinforforge:${rootProject.properties["forge_kotlin_version"]}")
 	forgeRuntimeLibrary(kotlin("stdlib-jdk8"))
 	forgeRuntimeLibrary(kotlin("reflect"))
-
+	modApi("dev.latvian.mods:rhino-forge:${rootProject.properties["rhino_version"]}")
 	implementation(project(":common", configuration = "namedElements")) { isTransitive = false }
 	"developmentForge"(project(":common", configuration = "namedElements")) { isTransitive = false }
-	bundle(project(":common", configuration = "transformProductionForge")) { isTransitive = false }
+	shadowCommon(project(":common", configuration = "transformProductionForge")) { isTransitive = false }
 }
 
 tasks {
-
 	processResources {
 		inputs.property("version", project.version)
 
@@ -36,3 +35,4 @@ tasks {
 		}
 	}
 }
+

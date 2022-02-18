@@ -1,13 +1,7 @@
 package org.hiirosakura.cookie.forge.mixin;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.RunArgs;
-import org.hiirosakura.cookie.forge.CookieForge;
-import org.hiirosakura.cookie.mod.CookieModKt;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
  * 项目名 cookie
@@ -23,9 +17,5 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(MinecraftClient.class)
 public abstract class MixinMinecraftClient {
 
-	@Inject(method = "<init>", at = @At("HEAD"))
-	private static void init(RunArgs args, CallbackInfo ci) {
-		CookieModKt.setCookieMod(CookieForge.INSTANCE);
-	}
 
 }

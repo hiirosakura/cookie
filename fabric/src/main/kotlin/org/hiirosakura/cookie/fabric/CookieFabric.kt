@@ -1,9 +1,7 @@
 package org.hiirosakura.cookie.fabric
 
 import net.fabricmc.api.ClientModInitializer
-import net.fabricmc.loader.api.FabricLoader
-import org.hiirosakura.cookie.Test
-import org.hiirosakura.cookie.api.ModInfo
+import org.hiirosakura.cookie.mod.Cookie
 
 /**
  *
@@ -19,19 +17,10 @@ import org.hiirosakura.cookie.api.ModInfo
  * @author forpleuvoir
 
  */
-object CookieFabric : ClientModInitializer, ModInfo {
-
-	override val id: String
-		get() = "cookie"
-
-	override val name: String
-		get() = FabricLoader.getInstance().getModContainer("cookie").get().metadata.name
-
-	override val version: String
-		get() = FabricLoader.getInstance().getModContainer("cookie").get().metadata.version.friendlyString
+object CookieFabric : ClientModInitializer {
 
 	override fun onInitializeClient() {
-		Test.test()
+		Cookie.initialize()
 	}
 
 
