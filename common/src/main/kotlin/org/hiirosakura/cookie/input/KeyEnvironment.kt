@@ -3,6 +3,7 @@ package org.hiirosakura.cookie.input
 import net.minecraft.text.Text
 import org.hiirosakura.cookie.common.Option
 import org.hiirosakura.cookie.common.mc
+import org.hiirosakura.cookie.gui.screen.ScreenManager
 import org.hiirosakura.cookie.util.tText
 
 /**
@@ -50,5 +51,5 @@ enum class KeyEnvironment(override val key: String) : Option {
 }
 
 fun currentEnv(): KeyEnvironment {
-	return if (mc.currentScreen == null) KeyEnvironment.InGame else KeyEnvironment.InScreen
+	return if (mc.currentScreen == null && !ScreenManager.hasScreen()) KeyEnvironment.InGame else KeyEnvironment.InScreen
 }

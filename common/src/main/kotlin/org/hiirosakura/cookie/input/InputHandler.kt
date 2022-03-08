@@ -24,12 +24,12 @@ object InputHandler : Tickable {
 	/**
 	 * 当前已按下的KeyCode
 	 */
-	private val keys: LinkedHashSet<Int> by lazy { LinkedHashSet() }
+	private val keys: LinkedHashSet<Int> = LinkedHashSet()
 
 	/**
 	 * 所有已注册的KeyBind
 	 */
-	private val keyBinds: LinkedList<KeyBind> by lazy { LinkedList() }
+	private val keyBinds: LinkedList<KeyBind> = LinkedList()
 
 	@JvmStatic
 	fun register(vararg keyBinds: KeyBind) {
@@ -94,7 +94,11 @@ object InputHandler : Tickable {
 
 	override fun tick() {
 		if (keyBinds.isNotEmpty()) keyBinds.forEach { it.tick() }
+	}
 
+	fun unPressAll() {
+		keys.clear()
+		keyBinds.forEach { it.update(keys) }
 	}
 
 }

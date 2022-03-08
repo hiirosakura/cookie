@@ -7,6 +7,7 @@ import org.hiirosakura.cookie.config.IConfigType
 import org.hiirosakura.cookie.config.options.ConfigBase
 import org.hiirosakura.cookie.config.options.ConfigType
 import org.hiirosakura.cookie.config.options.IConfigGroup
+import org.hiirosakura.cookie.util.ifc
 import java.util.*
 
 /**
@@ -54,7 +55,7 @@ class ConfigGroup(override val key: String, override val defaultValue: List<Conf
 
 	override fun matched(regex: Regex): Boolean {
 		getValue().forEach {
-			if (it.matched(regex)) return true
+			(it matched regex).ifc { return true }
 		}
 		return super.matched(regex)
 	}

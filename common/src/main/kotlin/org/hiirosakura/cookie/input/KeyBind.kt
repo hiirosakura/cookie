@@ -72,7 +72,7 @@ class KeyBind(
 			isPressed = false
 			return false
 		}
-		if (key.size == keys.size && setting.environment.envMatch()) {
+		if (key.size == keys.size && keys.containsAll(key) && setting.environment.envMatch()) {
 			isPressed = true
 			return setting.cancelFurtherProcess
 		} else if (isPressed) return setting.cancelFurtherProcess
@@ -204,7 +204,7 @@ class KeyBind(
 		return regex.run {
 			asTexts.forEach { if (this.containsMatchIn(it.string)) return@run true }
 			asTranslatableKey.forEach { if (this.containsMatchIn(it)) return@run true }
-			setting.matched(regex)
+			setting matched regex
 		}
 	}
 

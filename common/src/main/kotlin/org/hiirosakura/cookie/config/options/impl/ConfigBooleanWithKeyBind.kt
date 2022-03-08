@@ -66,9 +66,7 @@ class ConfigBooleanWithKeyBind(
 	}
 
 	override fun matched(regex: Regex): Boolean {
-		return if (regex.run {
-				keyBind.matched(regex) || this.containsMatchIn(configValue.toString())
-			}) true
+		return if (regex.run { keyBind matched regex || this.containsMatchIn(configValue.toString()) }) true
 		else super.matched(regex)
 	}
 

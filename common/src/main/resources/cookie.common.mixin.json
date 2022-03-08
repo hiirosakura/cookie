@@ -4,7 +4,9 @@
   "package": "org.hiirosakura.cookie.mixin",
   "required": true,
   "mixins": [
+    "MixinGameRenderer",
     "MixinKeyboard",
+    "MixinMain",
     "MixinMinecraftClient",
     "MixinMouse"
   ],

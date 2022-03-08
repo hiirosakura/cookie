@@ -2,6 +2,7 @@ package org.hiirosakura.cookie.common
 
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.font.TextRenderer
+import net.minecraft.client.sound.SoundManager
 
 /**
  *
@@ -20,3 +21,14 @@ import net.minecraft.client.font.TextRenderer
 val mc: MinecraftClient by lazy { MinecraftClient.getInstance() }
 
 val textRenderer: TextRenderer by lazy { mc.textRenderer }
+
+val soundManager: SoundManager by lazy { mc.soundManager }
+
+/**
+ * 是否为开发环境
+ */
+var isDevEnv: Boolean = false
+	set(value) {
+		field = value
+		println("开发环境")
+	}

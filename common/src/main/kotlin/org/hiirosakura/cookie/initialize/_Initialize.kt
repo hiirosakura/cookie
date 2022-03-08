@@ -1,6 +1,5 @@
 package org.hiirosakura.cookie.initialize
 
-import org.hiirosakura.cookie.common.CookieLogger
 import org.hiirosakura.cookie.config.ConfigManager
 
 /**

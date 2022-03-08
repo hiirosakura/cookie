@@ -2,6 +2,7 @@ package org.hiirosakura.cookie.mixin;
 
 import net.minecraft.client.Keyboard;
 import net.minecraft.client.MinecraftClient;
+import org.hiirosakura.cookie.gui.screen.ScreenManager;
 import org.hiirosakura.cookie.input.InputHandler;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -36,8 +37,16 @@ public abstract class MixinKeyboard {
 		if (window == this.client.getWindow().getHandle()) {
 			if (action == 1 || action == 2 && this.repeatEvents) {
 				if (InputHandler.keyPress(key)) ci.cancel();
+				ScreenManager.hasScreen(screen -> {
+					screen.keyPress(key, modifiers);
+					ci.cancel();
+				});
 			} else {
 				if (InputHandler.keyRelease(key)) ci.cancel();
+				ScreenManager.hasScreen(screen -> {
+					ci.cancel();
+					screen.keyRelease(key, modifiers);
+				});
 			}
 		}
 	}

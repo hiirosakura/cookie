@@ -48,9 +48,7 @@ class ConfigHotkey(
 	}
 
 	override fun matched(regex: Regex): Boolean {
-		return if (regex.run {
-				configValue.matched(regex)
-			}) true
+		return if (regex.run { configValue matched regex }) true
 		else super.matched(regex)
 	}
 
