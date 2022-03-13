@@ -32,11 +32,11 @@ abstract class Button(var text: Text = "".text) : AbstractElement() {
 
 	override var width: Int = textRenderer.getWidth(text) + 8
 		set(value) {
-			field = value.coerceAtLeast(4)
+			field = value.coerceAtLeast(6)
 		}
-	override var height: Int = 16
+	override var height: Int = 20
 		set(value) {
-			field = value.coerceAtLeast(4)
+			field = value.coerceAtLeast(7)
 		}
 
 	var buttonColor: Color<out Number> = Color4f.WHITE
@@ -47,7 +47,7 @@ abstract class Button(var text: Text = "".text) : AbstractElement() {
 			matrices,
 			text,
 			x,
-			if (active) if (mouseHover()) y - 0.5 else y else y + 0.25,
+			if (active) y - 1 else y,
 			width,
 			height,
 			color = Color4f.BLACK.alpha(if (active) 0.9f else 0.6f),
@@ -62,7 +62,7 @@ abstract class Button(var text: Text = "".text) : AbstractElement() {
 		enableDepthTest()
 		setShaderColor(buttonColor)
 		val u = if (active) if (mouseHover()) 16 else 0 else 32
-		draw9Texture(matrices, x, y, 2, width, height, 0, u, 16, 16)
+		draw9Texture(matrices, x, y, 4, width, height, 16, u, 16, 16)
 		disableBlend()
 	}
 
@@ -77,7 +77,7 @@ abstract class Button(var text: Text = "".text) : AbstractElement() {
 inline fun ParentElement.button(
 	text: String,
 	width: Int = textRenderer.getWidth(text) + 8,
-	height: Int = 16,
+	height: Int = 20,
 	color: Color<out Number> = Color4f.WHITE,
 	noinline onClick: Button.(Int) -> Unit = { },
 	scope: Button.() -> Unit = {}
@@ -87,7 +87,7 @@ inline fun ParentElement.button(
 inline fun ParentElement.button(
 	text: Text,
 	width: Int = textRenderer.getWidth(text) + 8,
-	height: Int = 16,
+	height: Int = 20,
 	color: Color<out Number> = Color4f.WHITE,
 	noinline onClick: Button.(Int) -> Unit = { },
 	scope: Button.() -> Unit = {}

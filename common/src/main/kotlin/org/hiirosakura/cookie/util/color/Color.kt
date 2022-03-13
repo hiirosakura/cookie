@@ -71,6 +71,22 @@ interface Color<T : Number> : JsonData {
 		return (value as Number).clamp(minValue as Number, maxValue as Number) as T
 	}
 
+	fun toHsl(): HSLColor {
+		return HSLColor(this)
+	}
+
+	fun fromHsl(hslColor: HSLColor) {
+		this.fromInt(hslColor.toRgba())
+	}
+
+	fun toHsv(): HSVColor {
+		return HSVColor(this)
+	}
+
+	fun fromHsv(hsvColor: HSVColor) {
+		this.fromInt(hsvColor.toRgba())
+	}
+
 	val minValue: T
 	val maxValue: T
 

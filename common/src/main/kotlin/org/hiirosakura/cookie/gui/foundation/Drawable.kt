@@ -10,7 +10,6 @@ import org.hiirosakura.cookie.util.color.Color
 import org.hiirosakura.cookie.util.color.Color4f
 import org.hiirosakura.cookie.util.math.D
 import org.hiirosakura.cookie.util.math.F
-import org.hiirosakura.cookie.util.math.I
 import kotlin.reflect.KFunction0
 
 /**
@@ -172,7 +171,7 @@ fun Drawable.drawTexture(
 
 /**
  * 渲染.9格式的材质
- * 只适用于边角为正方形的材质
+ * 只适用于边角为相同大小的正方形的材质
  * @receiver Drawable
  */
 fun Drawable.draw9Texture(
@@ -192,53 +191,130 @@ fun Drawable.draw9Texture(
 	textureWidth: Int = 256,
 	textureHeight: Int = 256
 ) {
+	draw9Texture(
+		matrices,
+		x,
+		y,
+		cornerSize,
+		cornerSize,
+		cornerSize,
+		cornerSize,
+		width,
+		height,
+		u,
+		v,
+		regionWidth,
+		regionHeight,
+		textureWidth,
+		textureHeight
+	)
+}
+
+/**
+ * 渲染.9格式的材质
+ * @receiver Drawable
+ */
+fun Drawable.draw9Texture(
+	matrices: MatrixStack,
+	x: Number,
+	y: Number,
+	cornerLeftWidth: Int,
+	cornerRightWidth: Int,
+	cornerTopHeight: Int,
+	cornerBottomHeight: Int,
+	width: Number,
+	height: Number,
+	u: Number,
+	v: Number,
+	regionWidth: Int,
+	regionHeight: Int,
+	textureWidth: Int = 256,
+	textureHeight: Int = 256
+) {
 	/**
 	 * centerWidth
 	 */
-	val cw = width.D - (cornerSize * 2)
+	val cw = width.D - (cornerLeftWidth + cornerRightWidth)
 
 	/**
 	 * centerHeight
 	 */
-	val ch = height.D - (cornerSize * 2)
+	val ch = height.D - (cornerTopHeight + cornerBottomHeight)
 
 	/**
 	 * centerRegionWidth
 	 */
-	val crw = regionWidth - (cornerSize.I * 2)
+	val crw = regionWidth - (cornerLeftWidth + cornerRightWidth)
 
 	/**
 	 *  centerRegionHeight
 	 */
-	val crh = regionHeight - (cornerSize.I * 2)
+	val crh = regionHeight - (cornerTopHeight + cornerBottomHeight)
 
-	val centerU = u.D + cornerSize
-	val rightU = u.D + (regionWidth - cornerSize)
-	val centerV = v.D + cornerSize
-	val bottomV = v.D + (regionHeight - cornerSize)
-	val centerX = x.D + cornerSize
-	val rightX = x.D + (width.D - cornerSize)
-	val centerY = y.D + cornerSize
-	val bottomY = y.D + (height.D - cornerSize)
+	val centerU = u.D + cornerLeftWidth
+	val rightU = u.D + (regionWidth - cornerRightWidth)
+	val centerV = v.D + cornerTopHeight
+	val bottomV = v.D + (regionHeight - cornerBottomHeight)
+	val centerX = x.D + cornerLeftWidth
+	val rightX = x.D + (width.D - cornerRightWidth)
+	val centerY = y.D + cornerTopHeight
+	val bottomY = y.D + (height.D - cornerBottomHeight)
 	//top left
-	drawTexture(matrices, x, y, cornerSize, cornerSize, u, v, cornerSize, cornerSize, textureWidth, textureHeight)
+	drawTexture(matrices, x, y, cornerLeftWidth, cornerTopHeight, u, v, cornerLeftWidth, cornerTopHeight, textureWidth, textureHeight)
 	//top center
-	drawTexture(matrices, centerX, y, cw, cornerSize, centerU, v, crw, cornerSize, textureWidth, textureHeight)
+	drawTexture(matrices, centerX, y, cw, cornerTopHeight, centerU, v, crw, cornerTopHeight, textureWidth, textureHeight)
 	//top right
-	drawTexture(matrices, rightX, y, cornerSize, cornerSize, rightU, v, cornerSize, cornerSize, textureWidth, textureHeight)
+	drawTexture(
+		matrices,
+		rightX,
+		y,
+		cornerRightWidth,
+		cornerTopHeight,
+		rightU,
+		v,
+		cornerRightWidth,
+		cornerTopHeight,
+		textureWidth,
+		textureHeight
+	)
 	//center left
-	drawTexture(matrices, x, centerY, cornerSize, ch, u, centerV, cornerSize, crh, textureWidth, textureHeight)
+	drawTexture(matrices, x, centerY, cornerLeftWidth, ch, u, centerV, cornerLeftWidth, crh, textureWidth, textureHeight)
 	//center
 	drawTexture(matrices, centerX, centerY, cw, ch, centerU, centerV, crw, crh, textureWidth, textureHeight)
 	//center right
-	drawTexture(matrices, rightX, centerY, cornerSize, ch, rightU, centerV, cornerSize, crh, textureWidth, textureHeight)
+	drawTexture(matrices, rightX, centerY, cornerRightWidth, ch, rightU, centerV, cornerRightWidth, crh, textureWidth, textureHeight)
 	//bottom left
-	drawTexture(matrices, x, bottomY, cornerSize, cornerSize, u, bottomV, cornerSize, cornerSize, textureWidth, textureHeight)
+	drawTexture(
+		matrices,
+		x,
+		bottomY,
+		cornerLeftWidth,
+		cornerBottomHeight,
+		u,
+		bottomV,
+		cornerLeftWidth,
+		cornerBottomHeight,
+		textureWidth,
+		textureHeight
+	)
 	//bottom center
-	drawTexture(matrices, centerX, bottomY, cw, cornerSize, centerU, bottomV, crw, cornerSize, textureWidth, textureHeight)
+	drawTexture(matrices, centerX, bottomY, cw, cornerBottomHeight, centerU, bottomV, crw, cornerBottomHeight, textureWidth, textureHeight)
 	//bottom right
-	drawTexture(matrices, rightX, bottomY, cornerSize, cornerSize, rightU, bottomV, cornerSize, cornerSize, textureWidth, textureHeight)
+	drawTexture(
+		matrices,
+		rightX,
+		bottomY,
+		cornerRightWidth,
+		cornerBottomHeight,
+		rightU,
+		bottomV,
+		cornerRightWidth,
+		cornerBottomHeight,
+		textureWidth,
+		textureHeight
+	)
 }
+
 
 fun Drawable.drawCenteredText(
 	matrices: MatrixStack,

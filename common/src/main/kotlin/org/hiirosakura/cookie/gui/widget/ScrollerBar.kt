@@ -1,7 +1,11 @@
 package org.hiirosakura.cookie.gui.widget
 
 import net.minecraft.client.util.math.MatrixStack
-import org.hiirosakura.cookie.gui.foundation.AbstractElement
+import org.hiirosakura.cookie.common.WIDGET_TEXTURE
+import org.hiirosakura.cookie.gui.foundation.*
+import org.hiirosakura.cookie.util.clamp
+import org.hiirosakura.cookie.util.ifc
+import org.hiirosakura.cookie.util.math.D
 
 /**
  * 滚动条
@@ -17,17 +21,111 @@ import org.hiirosakura.cookie.gui.foundation.AbstractElement
  * @author forpleuvoir
 
  */
-class ScrollerBar : AbstractElement() {
+open class ScrollerBar : AbstractElement() {
 
 	var horizontal: Boolean = false
 
-	override val render: (matrices: MatrixStack, delta: Number) -> Unit = { matrices, delta ->
+	override var width: Int = 8
+		set(value) {
+			field = value.coerceAtLeast(8)
+		}
 
+	override var height: Int = 8
+		set(value) {
+			field = value.coerceAtLeast(8)
+		}
+
+	/**
+	 * 滚动条当前的计量
+	 */
+	private var amount = 0.0
+		set(value) {
+			field = value.clamp(0, maxAmount())
+			amountConsumer(field)
+		}
+
+	var amountConsumer: (Double) -> Unit = {}
+
+	/**
+	 * 滚动条最大计量
+	 */
+	var maxAmount: () -> Double = { 0.0 }
+
+	/**
+	 * 页面占总数的百分比
+	 *
+	 * 当前页面条目/总数
+	 */
+	var percent: () -> Double = { 0.0 }
+
+	var amountDelta: Double = 1.0
+
+	open val shouldRender: Boolean
+		get() = maxAmount() > 0
+
+	open operator fun minusAssign(amount: Double) {
+		this.amount -= amount
 	}
-	override var width: Int
-		get() = TODO("Not yet implemented")
-		set(value) {}
-	override var height: Int
-		get() = TODO("Not yet implemented")
-		set(value) {}
+
+	open operator fun plusAssign(amount: Double) {
+		this.amount += amount
+	}
+
+	override var mouseDragging: (mouseX: Number, mouseY: Number, button: Int, deltaX: Number, deltaY: Number) -> Boolean =
+		{ mouseX, mouseY, _, _, _ ->
+			setAmountFromMouse(mouseX, mouseY)
+			false
+		}
+
+	override var mouseClick: (mouseX: Number, mouseY: Number, button: Int) -> Boolean = { mouseX, mouseY, button ->
+		onClick(button)
+		setAmountFromMouse(mouseX, mouseY)
+		false
+	}
+
+	protected open fun setAmountFromMouse(mouseX: Number, mouseY: Number) {
+		val percent: Double = if (!horizontal) {
+			(mouseY.D - this.y) / height
+		} else {
+			(mouseX.D - this.x) / width
+		}
+		amount = maxAmount() * percent
+	}
+
+	override var mouseScrolling: (mouseX: Number, mouseY: Number, amount: Number) -> Boolean = { _, _, amount ->
+		this -= amount.D * amountDelta
+		false
+	}
+
+	override val render: (matrices: MatrixStack, delta: Number) -> Unit = { matrices, delta ->
+		shouldRender.ifc {
+			setShaderTexture(WIDGET_TEXTURE)
+			enableBlend()
+			defaultBlendFunc()
+			enableDepthTest()
+			renderBackground(matrices, delta)
+			renderBar(matrices, delta)
+			disableBlend()
+		}
+	}
+
+	protected open fun renderBar(matrices: MatrixStack, delta: Number) {
+		if (!horizontal) {
+			val height = (percent() * this.height)
+			val maxScrollLength = this.height - height
+			val posY = this.y + ((this.amount / this.maxAmount()) * maxScrollLength).toInt()
+			draw9Texture(matrices, x, posY, 4, width, height, 0, 0, 16, 16)
+		} else {
+			val width = (percent() * this.width)
+			val maxScrollLength = this.width - width
+			val posX = this.x + ((this.amount / this.maxAmount()) * maxScrollLength).toInt()
+			draw9Texture(matrices, posX, y, 4, width, height + 1, 0, 0, 16, 16)
+		}
+	}
+
+	protected open fun renderBackground(matrices: MatrixStack, delta: Number) {
+		draw9Texture(matrices, x, y, 4, width, height, 32, 0, 16, 16)
+	}
+
+
 }

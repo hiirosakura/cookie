@@ -29,6 +29,7 @@ class ColumnLayout : Layout() {
 			val preElementBottom = preElement?.bottom?.D ?: 0.0
 			val marginTop = (if (preElement != null) preElementBottom else padding.top) + element.margin.top
 			if (!element.fixed) element.setPosition(this.position + Vector3d(padding.left + element.margin.left, marginTop))
+			if (element is Layout) element.align()
 			height = (element.bottom.D + element.margin.bottom) - this.y + padding.bottom
 			if (element.height + element.margin.vertical + padding.vertical > width) {
 				width = element.width + element.margin.horizontal + padding.horizontal

@@ -26,7 +26,7 @@ interface Delegate {
 	fun onChanged()
 }
 
-class MutableValue<T>(value: T, val key: String, private val screen: Screen) : Delegate {
+class MutableValue<T>(val key: String, private val screen: Screen, private var onValueChanged: (T) -> Unit = {}) : Delegate {
 
 	@Suppress("UNCHECKED_CAST")
 	operator fun getValue(thisRef: Any?, kProperty: KProperty<*>): T {
@@ -40,13 +40,24 @@ class MutableValue<T>(value: T, val key: String, private val screen: Screen) : D
 		}
 	}
 
+	@Suppress("UNCHECKED_CAST")
 	override fun onChanged() {
 		screen.initialize()
+		onValueChanged(screen.remembers[key] as T)
 	}
 
 }
 
-class DelegateMutableList<T>(private val value: MutableList<T>, private val screen: Screen) : MutableList<T> by value, Delegate {
+class DelegateMutableList<T>(
+	private val value: MutableList<T>,
+	private val screen: Screen,
+	private var onValueChanged: (MutableList<T>) -> Unit = {}
+) : MutableList<T> by value, Delegate {
+
+	override fun onChanged() {
+		screen.initialize()
+		onValueChanged(value)
+	}
 
 	override fun add(element: T): Boolean {
 		if (value.add(element)) {
@@ -111,16 +122,18 @@ class DelegateMutableList<T>(private val value: MutableList<T>, private val scre
 		onChanged()
 	}
 
-	override fun onChanged() {
-		screen.initialize()
-	}
 
 }
 
-class DelegateMutableMap<K, V>(private val value: MutableMap<K, V>, private val screen: Screen) : MutableMap<K, V> by value, Delegate {
+class DelegateMutableMap<K, V>(
+	private val value: MutableMap<K, V>,
+	private val screen: Screen,
+	private var onValueChanged: (MutableMap<K, V>) -> Unit = {}
+) : MutableMap<K, V> by value, Delegate {
 
 	override fun onChanged() {
 		screen.initialize()
+		onValueChanged(value)
 	}
 
 	override fun put(key: K, value: V): V? {
@@ -173,32 +186,32 @@ class DelegateMutableMap<K, V>(private val value: MutableMap<K, V>, private val 
 }
 
 @Suppress("UNCHECKED_CAST")
-fun <T> Screen.rememberValueOf(key: String, value: T): MutableValue<T> {
+fun <T> Screen.rememberValueOf(key: String, value: T, onValueChanged: (T) -> Unit = {}): MutableValue<T> {
 	return if (remembers.containsKey(key)) {
-		MutableValue(remembers[key] as T, key, this)
+		MutableValue(key, this, onValueChanged)
 	} else {
 		remembers[key] = value as Any
-		MutableValue(value, key, this)
+		MutableValue(key, this, onValueChanged)
 	}
 }
 
 @Suppress("UNCHECKED_CAST")
-fun <T> Screen.rememberListOf(key: String, list: MutableList<T>): MutableList<T> {
+fun <T> Screen.rememberListOf(key: String, list: MutableList<T>, onValueChanged: (MutableList<T>) -> Unit = {}): MutableList<T> {
 	return if (remembers.containsKey(key)) {
-		DelegateMutableList(remembers[key] as MutableList<T>, this)
+		DelegateMutableList(remembers[key] as MutableList<T>, this, onValueChanged)
 	} else {
 		remembers[key] = list as Any
-		DelegateMutableList(remembers[key] as MutableList<T>, this)
+		DelegateMutableList(remembers[key] as MutableList<T>, this, onValueChanged)
 	}
 }
 
 @Suppress("UNCHECKED_CAST")
-fun <K, V> Screen.rememberMapOf(key: String, list: MutableMap<K, V>): MutableMap<K, V> {
+fun <K, V> Screen.rememberMapOf(key: String, list: MutableMap<K, V>, onValueChanged: (MutableMap<K, V>) -> Unit = {}): MutableMap<K, V> {
 	return if (remembers.containsKey(key)) {
-		DelegateMutableMap(remembers[key] as MutableMap<K, V>, this)
+		DelegateMutableMap(remembers[key] as MutableMap<K, V>, this, onValueChanged)
 	} else {
 		remembers[key] = list as Any
-		DelegateMutableMap(remembers[key] as MutableMap<K, V>, this)
+		DelegateMutableMap(remembers[key] as MutableMap<K, V>, this, onValueChanged)
 	}
 }
 

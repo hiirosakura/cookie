@@ -2,6 +2,7 @@ package org.hiirosakura.cookie.forge
 
 import net.minecraftforge.fml.common.Mod
 import org.hiirosakura.cookie.mod.Cookie
+import javax.script.ScriptEngineManager
 
 /**
  *
@@ -22,6 +23,14 @@ object CookieForge {
 
 	init {
 		Cookie.initialize()
+		val scriptEngine = ScriptEngineManager().getEngineByName("nashorn")
+		scriptEngine.eval(
+			"""
+			var i = 0;
+			i++;
+		
+		""".trimIndent()
+		)
 	}
 
 }

@@ -1,7 +1,6 @@
 package org.hiirosakura.cookie.gui.foundation.layout
 
 import org.hiirosakura.cookie.gui.foundation.AbstractParentElement
-import org.hiirosakura.cookie.gui.foundation.ParentElement
 
 /**
  *
@@ -25,11 +24,6 @@ abstract class Layout : AbstractParentElement() {
 	abstract fun align()
 
 	override fun initialize() {
-		children.stream().filter {
-			it is ParentElement
-		}.forEach {
-			(it as ParentElement).initialize()
-		}
 		align()
 	}
 }

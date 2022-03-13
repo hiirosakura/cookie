@@ -11,6 +11,7 @@ import org.hiirosakura.cookie.gui.foundation.rememberListOf
 import org.hiirosakura.cookie.gui.foundation.rememberValueOf
 import org.hiirosakura.cookie.gui.screen.ScreenManager.openScreen
 import org.hiirosakura.cookie.gui.screen.simpleScreen
+import org.hiirosakura.cookie.gui.widget.ScrollerBar
 import org.hiirosakura.cookie.gui.widget.button.button
 import org.hiirosakura.cookie.input.InputHandler
 import org.hiirosakura.cookie.input.KeyBind
@@ -54,7 +55,9 @@ object Cookie : ModInfo, Initializable {
 								drawOutlinedBox(matrices, x, y, width, height, Color4f.RED.alpha(0.6f), Color4f.WHITE, innerOutline = true)
 							}
 						var text by rememberValueOf("text", "a ")
-						var active by rememberValueOf("active", true)
+						var active by rememberValueOf("active", true) {
+							println("当前状态$it")
+						}
 						var clickCounter by rememberValueOf("clickCounter", 0)
 						val list = rememberListOf("list", ArrayList<String>().apply {
 							for (i in 0..5) {
@@ -89,6 +92,33 @@ object Cookie : ModInfo, Initializable {
 								render = { matrices, _ ->
 									drawOutlinedBox(matrices, x, y, width, height, Color4f.BLUE.alpha(0.6f), Color4f.WHITE)
 								}
+							row {
+								if (isDevEnv)
+									render = { matrices, _ ->
+										drawOutlinedBox(matrices, x, y, width, height, Color4f.GREEN.alpha(0.6f), Color4f.WHITE)
+									}
+								button(
+									text = "测试按钮ddddddddd",
+									onClick = {
+										println("我点击了添加按钮")
+									}
+								)
+								this.addElement(ScrollerBar().apply {
+									width = 8
+									height = 120
+									horizontal = false
+									maxAmount = { 200.0 }
+									percent = { 0.1 }
+								})
+							}
+							this.addElement(ScrollerBar().apply {
+								width = 120
+								height = 8
+								horizontal = true
+								maxAmount = { 200.0 }
+								percent = { 0.1 }
+								amountDelta = 2.0
+							})
 							button(
 								text = "测试按钮ddddddddd",
 								onClick = {

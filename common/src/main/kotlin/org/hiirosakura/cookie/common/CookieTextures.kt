@@ -17,4 +17,4 @@ import org.hiirosakura.cookie.mod.Cookie
  * @author forpleuvoir
 
  */
-val WIDGET_TEXTURE: Identifier = Identifier(Cookie.id, "texture/gui/widgets.png")
+val WIDGET_TEXTURE: Identifier = Identifier(Cookie.id, "texture/gui/cookie_widget.png")
