@@ -31,6 +31,8 @@ interface Element : Drawable, PositionElement, Tickable {
 	 */
 	val position: Vector3<Double>
 
+	override var visible: Boolean
+
 	/**
 	 * 固定的
 	 *
@@ -44,13 +46,11 @@ interface Element : Drawable, PositionElement, Tickable {
 			position.x = value
 		}
 
-
 	var y: Double
 		get() = position.y
 		set(value) {
 			position.y = value
 		}
-
 
 	var z: Double
 		get() = position.z
@@ -93,7 +93,6 @@ interface Element : Drawable, PositionElement, Tickable {
 	 * 底部位置
 	 */
 	val bottom: Number get() = position.y.D + height.D
-
 
 	val margin: Margin
 

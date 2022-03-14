@@ -21,6 +21,8 @@ class Padding(
 	var right: Double = 0.0
 ) {
 
+	constructor(padding: Double) : this(padding, padding, padding, padding)
+
 	var horizontal: Double
 		get() = left + right
 		set(value) {

@@ -48,7 +48,7 @@ interface ParentElement : Element, Initializable {
 
 	override fun initialize()
 
-	fun addElement(element: Element): Element {
+	fun <T : Element> addElement(element: T): T {
 		this.children.addLast(element)
 		if (element is ParentElement) element.initialize()
 		return element

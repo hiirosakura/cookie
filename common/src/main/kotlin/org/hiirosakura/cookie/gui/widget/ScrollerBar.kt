@@ -26,19 +26,25 @@ open class ScrollerBar : AbstractElement() {
 	var horizontal: Boolean = false
 
 	override var width: Int = 8
+		get() {
+			return if (shouldRender) field else 0
+		}
 		set(value) {
-			field = value.coerceAtLeast(8)
+			field = value.coerceAtLeast(if (shouldRender) 8 else 0)
 		}
 
 	override var height: Int = 8
+		get() {
+			return if (shouldRender) field else 0
+		}
 		set(value) {
-			field = value.coerceAtLeast(8)
+			field = value.coerceAtLeast(if (shouldRender) 8 else 0)
 		}
 
 	/**
 	 * 滚动条当前的计量
 	 */
-	private var amount = 0.0
+	var amount = 0.0
 		set(value) {
 			field = value.clamp(0, maxAmount())
 			amountConsumer(field)
@@ -58,10 +64,9 @@ open class ScrollerBar : AbstractElement() {
 	 */
 	var percent: () -> Double = { 0.0 }
 
-	var amountDelta: Double = 1.0
+	var amountDelta: () -> Double = { 1.0 }
 
-	open val shouldRender: Boolean
-		get() = maxAmount() > 0
+	open val shouldRender: Boolean get() = maxAmount() > 0
 
 	open operator fun minusAssign(amount: Double) {
 		this.amount -= amount
@@ -93,7 +98,7 @@ open class ScrollerBar : AbstractElement() {
 	}
 
 	override var mouseScrolling: (mouseX: Number, mouseY: Number, amount: Number) -> Boolean = { _, _, amount ->
-		this -= amount.D * amountDelta
+		this -= amount.D * amountDelta()
 		false
 	}
 
@@ -127,5 +132,26 @@ open class ScrollerBar : AbstractElement() {
 		draw9Texture(matrices, x, y, 4, width, height, 32, 0, 16, 16)
 	}
 
+}
 
+inline fun ParentElement.scrollerBar(
+	width: Int = 8,
+	height: Int = 8,
+	horizontal: Boolean = false,
+	noinline percent: () -> Double,
+	noinline maxAmount: () -> Double,
+	noinline amountConsumer: (Double) -> Unit = {},
+	noinline amountDelta: () -> Double = { 1.0 },
+	scope: ScrollerBar.() -> Unit = {}
+): ScrollerBar {
+	return this.addElement(ScrollerBar().apply {
+		this.width = width
+		this.height = height
+		this.horizontal = horizontal
+		this.percent = percent
+		this.maxAmount = maxAmount
+		this.amountDelta = amountDelta
+		this.amountConsumer = amountConsumer
+		scope()
+	})
 }

@@ -21,6 +21,8 @@ class Margin(
 	var right: Double = 0.0
 ) {
 
+	constructor(margin: Double) : this(margin, margin, margin, margin)
+
 	var horizontal: Double
 		get() = left + right
 		set(value) {

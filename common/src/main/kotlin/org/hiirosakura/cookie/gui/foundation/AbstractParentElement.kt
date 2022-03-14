@@ -27,6 +27,8 @@ abstract class AbstractParentElement : ParentElement, Modifiable {
 
 	override val children: LinkedList<Element> = LinkedList()
 
+	override var visible: Boolean = true
+
 	override var fixed: Boolean = false
 
 	override var dragging: Boolean = false
@@ -51,7 +53,7 @@ abstract class AbstractParentElement : ParentElement, Modifiable {
 
 	override fun padding(padding: Padding) = this.padding.set(padding)
 
-	var render: (matrices: MatrixStack, delta: Number) -> Unit = { _, _ -> }
+	open var render: (matrices: MatrixStack, delta: Number) -> Unit = { _, _ -> }
 
 	open var renderWith: AbstractParentElement.(matrices: MatrixStack, delta: Number) -> Unit = { matrices: MatrixStack, delta: Number ->
 		render.invoke(matrices, delta)

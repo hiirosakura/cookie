@@ -28,6 +28,8 @@ abstract class AbstractScreen : AbstractParentElement(), Screen {
 
 	override val remembers: MutableMap<String, Any?> = HashMap()
 
+	override var visible: Boolean = true
+
 	final override var width: Int = mc.window.scaledWidth
 		set(value) {
 			field = value

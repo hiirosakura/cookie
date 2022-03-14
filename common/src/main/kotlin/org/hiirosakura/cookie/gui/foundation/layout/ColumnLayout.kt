@@ -31,7 +31,7 @@ class ColumnLayout : Layout() {
 			if (!element.fixed) element.setPosition(this.position + Vector3d(padding.left + element.margin.left, marginTop))
 			if (element is Layout) element.align()
 			height = (element.bottom.D + element.margin.bottom) - this.y + padding.bottom
-			if (element.height + element.margin.vertical + padding.vertical > width) {
+			if (element.width + element.margin.horizontal + padding.horizontal > width) {
 				width = element.width + element.margin.horizontal + padding.horizontal
 			}
 		}

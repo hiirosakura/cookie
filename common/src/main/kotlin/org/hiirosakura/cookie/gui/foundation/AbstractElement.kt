@@ -26,6 +26,8 @@ abstract class AbstractElement : Element, Modifiable {
 
 	override val position: Vector3<Double> = Vector3d()
 
+	override var visible: Boolean = true
+
 	override val margin: Margin = Margin()
 
 	override var fixed: Boolean = false
