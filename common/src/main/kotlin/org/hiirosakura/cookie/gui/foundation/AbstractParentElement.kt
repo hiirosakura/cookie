@@ -53,11 +53,12 @@ abstract class AbstractParentElement : ParentElement, Modifiable {
 
 	override fun padding(padding: Padding) = this.padding.set(padding)
 
-	open var render: (matrices: MatrixStack, delta: Number) -> Unit = { _, _ -> }
+	open var render: (matrices: MatrixStack, delta: Number) -> Unit = { matrices, delta ->
+		super.render(matrices, delta)
+	}
 
 	open var renderWith: AbstractParentElement.(matrices: MatrixStack, delta: Number) -> Unit = { matrices: MatrixStack, delta: Number ->
 		render.invoke(matrices, delta)
-		super.render(matrices, delta)
 	}
 
 	override fun render(matrices: MatrixStack, delta: Number) = renderWith(matrices, delta)

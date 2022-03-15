@@ -23,6 +23,9 @@ import org.hiirosakura.cookie.util.math.D
  */
 open class ScrollerBar : AbstractElement() {
 
+	/**
+	 * 是否为水平滚动条
+	 */
 	var horizontal: Boolean = false
 
 	override var width: Int = 8
@@ -64,7 +67,7 @@ open class ScrollerBar : AbstractElement() {
 	 */
 	var percent: () -> Double = { 0.0 }
 
-	var amountDelta: () -> Double = { 1.0 }
+	var amountDelta: () -> Double = { 6.0 }
 
 	open val shouldRender: Boolean get() = maxAmount() > 0
 

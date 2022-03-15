@@ -28,6 +28,10 @@ abstract class AbstractElement : Element, Modifiable {
 
 	override var visible: Boolean = true
 
+	override var handleLevel: Int = 0
+
+	override var renderLevel: Int = 0
+
 	override val margin: Margin = Margin()
 
 	override var fixed: Boolean = false

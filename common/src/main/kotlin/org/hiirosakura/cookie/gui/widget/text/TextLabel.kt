@@ -1,4 +1,4 @@
-package org.hiirosakura.cookie.gui.widget
+package org.hiirosakura.cookie.gui.widget.text
 
 import net.minecraft.client.render.LightmapTextureManager
 import net.minecraft.client.render.Tessellator
@@ -20,7 +20,7 @@ import org.hiirosakura.cookie.util.text
 
  * 项目名 cookie
 
- * 包名 org.hiirosakura.cookie.gui.widget
+ * 包名 org.hiirosakura.cookie.gui.widget.text
 
  * 文件名 TextLabel
 
@@ -30,37 +30,41 @@ import org.hiirosakura.cookie.util.text
 
  */
 class TextLabel(
-	var text: Text,
-	override var width: Int = textRenderer.getWidth(text),
+	var text: () -> Text,
+	override var width: Int = textRenderer.getWidth(text()),
 	override var height: Int = textRenderer.fontHeight,
 ) : AbstractElement() {
 
-	constructor(text: String, width: Int, height: Int) : this(text(text), width, height)
+	constructor(text: String, width: Int = textRenderer.getWidth(text), height: Int = textRenderer.fontHeight) : this(
+		{ text(text) },
+		width,
+		height
+	)
 
 	var align: Align = CENTER
 
-	private val textWidth: Int get() = textRenderer.getWidth(this.text)
+	private val textWidth: Int get() = textRenderer.getWidth(this.text())
 	private val textHeight: Int get() = textRenderer.fontHeight
 
-	private val centerX: Double get() = this.x + this.width / 2
-	private val centerY: Double get() = this.y + this.height / 2
+	private val centerX: Double get() = (this.x + this.width / 2) + padding.left
+	private val centerY: Double get() = (this.y + this.height / 2) + padding.top
 
 	var textColor: Color<out Number> = Color4i().fromInt(Color4i.WHITE.rgba)
 	var rightToLeft: Boolean = false
-	var shadow: Boolean = true
+	var shadow: Boolean = false
 	var backgroundColor: Color<out Number> = Color4i.BLACK.apply { alpha = 0 }
 	var bordColor: Color<out Number> = Color4i.BLACK.apply { alpha = 0 }
 
 	private val renderText: String
 		get() {
-			return if (this.width - padding.horizontal >= textRenderer.getWidth(text)) {
-				text.string
+			return if (this.width - padding.horizontal >= textRenderer.getWidth(text())) {
+				text().string
 			} else {
-				textRenderer.trimToWidth(text, (this.width - padding.horizontal).toInt()).string
+				textRenderer.trimToWidth(text(), (this.width - padding.horizontal).toInt()).string
 			}
 		}
 
-	override val render: (matrices: MatrixStack, delta: Number) -> Unit = { matrices: MatrixStack, _: Number ->
+	override var render: (matrices: MatrixStack, delta: Number) -> Unit = { matrices: MatrixStack, _: Number ->
 		drawOutlinedBox(matrices, x, y, width, height, backgroundColor, bordColor, 1, false)
 		renderText(matrices)
 	}
@@ -129,23 +133,23 @@ inline fun ParentElement.textLabel(
 	text: String,
 	width: Int = textRenderer.getWidth(text),
 	height: Int = textRenderer.fontHeight,
-	noinline onClick: (TextLabel.(Int) -> Boolean) = { true },
+	noinline onClick: TextLabel.(Int) -> Unit = { },
 	align: Align = CENTER,
-	shadow: Boolean = true,
+	shadow: Boolean = false,
 	rightToLeft: Boolean = false,
 	backgroundColor: Color<out Number> = Color4i.BLACK.apply { alpha = 0 },
 	bordColor: Color<out Number> = Color4i.BLACK.apply { alpha = 0 },
 	scope: (TextLabel.() -> Unit) = {},
-): TextLabel = textLabel(text(text), width, height, onClick, align, shadow, rightToLeft, backgroundColor, bordColor, scope)
+): TextLabel = textLabel({ text(text) }, width, height, onClick, align, shadow, rightToLeft, backgroundColor, bordColor, scope)
 
 
 inline fun ParentElement.textLabel(
-	text: Text,
-	width: Int = textRenderer.getWidth(text),
+	noinline text: () -> Text,
+	width: Int = textRenderer.getWidth(text()),
 	height: Int = textRenderer.fontHeight,
-	noinline onClick: (TextLabel.(Int) -> Boolean) = { true },
+	noinline onClick: TextLabel.(Int) -> Unit = { },
 	align: Align = CENTER,
-	shadow: Boolean = true,
+	shadow: Boolean = false,
 	rightToLeft: Boolean = false,
 	backgroundColor: Color<out Number> = Color4i.BLACK.apply { alpha = 0 },
 	bordColor: Color<out Number> = Color4i.BLACK.apply { alpha = 0 },

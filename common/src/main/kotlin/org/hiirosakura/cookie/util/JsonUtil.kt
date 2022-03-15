@@ -1,6 +1,7 @@
 package org.hiirosakura.cookie.util
 
 import com.google.gson.*
+import org.hiirosakura.cookie.util.JsonUtil.toJsonObject
 
 /**
  *
@@ -70,6 +71,52 @@ object JsonUtil {
 	}
 
 	fun Any.toJsonObject(): JsonObject {
-		return JsonUtil.gson.toJsonTree(this).asJsonObject
+		return gson.toJsonTree(this).asJsonObject
 	}
+}
+
+class JsonObjectScope {
+
+	val jsonObject: JsonObject = JsonObject()
+
+	infix fun String.to(value: String) {
+		jsonObject.addProperty(this, value)
+	}
+
+	infix fun String.to(value: Number) {
+		jsonObject.addProperty(this, value)
+	}
+
+	infix fun String.to(value: Boolean) {
+		jsonObject.addProperty(this, value)
+	}
+
+	infix fun String.to(value: Char) {
+		jsonObject.addProperty(this, value)
+	}
+
+	infix fun String.to(value: JsonElement) {
+		jsonObject.add(this, value)
+	}
+}
+
+fun jsonArray(vararg elements: Any): JsonArray {
+	return JsonArray().apply {
+		for (element in elements) {
+			when (element) {
+				is Boolean -> add(element)
+				is Number -> add(element)
+				is String -> add(element)
+				is Char -> add(element)
+				is JsonElement -> add(element)
+				else -> add(element.toJsonObject())
+			}
+		}
+	}
+}
+
+fun jsonObject(scope: JsonObjectScope.() -> Unit): JsonObject {
+	val jsonObjectScope = JsonObjectScope()
+	jsonObjectScope.scope()
+	return jsonObjectScope.jsonObject
 }

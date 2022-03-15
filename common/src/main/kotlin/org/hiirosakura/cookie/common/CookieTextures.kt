@@ -18,3 +18,4 @@ import org.hiirosakura.cookie.mod.Cookie
 
  */
 val WIDGET_TEXTURE: Identifier = Identifier(Cookie.id, "texture/gui/cookie_widget.png")
+val ICON_TEXTURE: Identifier = Identifier(Cookie.id, "texture/gui/cookie_icon.png")

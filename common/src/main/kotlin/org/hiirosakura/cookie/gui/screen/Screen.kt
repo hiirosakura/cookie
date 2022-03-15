@@ -40,7 +40,7 @@ interface Screen : ParentElement {
 	/**
 	 * 关闭当前Screen
 	 */
-	fun close() = onClose().ifc { ScreenManager.current = this.parentScreen }
+	fun close() = onClose().ifc { ScreenManager.setCurrent(this.parentScreen) }
 
 	fun resize(width: Number, height: Number) {}
 

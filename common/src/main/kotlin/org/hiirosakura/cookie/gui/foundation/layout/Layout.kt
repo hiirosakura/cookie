@@ -1,6 +1,7 @@
 package org.hiirosakura.cookie.gui.foundation.layout
 
 import org.hiirosakura.cookie.gui.foundation.AbstractParentElement
+import org.hiirosakura.cookie.gui.foundation.Element
 
 /**
  *
@@ -25,5 +26,20 @@ abstract class Layout : AbstractParentElement() {
 
 	override fun initialize() {
 		align()
+	}
+
+	/**
+	 * 上一个非固定的元素
+	 * @param children LinkedList<Element>
+	 * @param element Element
+	 * @return Element?
+	 */
+	fun preNotFixedElement(children: List<Element>, element: Element): Element? {
+		val indexOf = children.indexOf(element)
+		if (indexOf < 1) return null
+		val e = children[indexOf - 1]
+		return if (e.fixed) {
+			preNotFixedElement(children, e)
+		} else e
 	}
 }

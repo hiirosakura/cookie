@@ -92,6 +92,8 @@ interface ParentElement : Element, Initializable {
 			it.active.notc { return true }
 		}
 		focused = hoveredElement
+		if (focused != null)
+			println(focused!!::class.simpleName)
 		if (button == 0) dragging = true
 		return if (focused?.active == true)
 			focused?.mouseClick(mouseX, mouseY, button) ?: true

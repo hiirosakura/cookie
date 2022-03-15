@@ -23,17 +23,20 @@ import org.hiirosakura.cookie.util.math.Vector3d
 class RowLayout : Layout() {
 
 	override fun align() {
-		var width = 0.0
+		var width = this.padding.vertical
 		var height = 0.0
 		children.forEach { element ->
-			val preElement = elementPre(element)
-			val preElementRight = preElement?.right?.D ?: 0.0
-			val marginLeft = (if (preElement != null) preElementRight else padding.left) + element.margin.left
-			if (!element.fixed) element.setPosition(this.position + Vector3d(marginLeft, padding.top + element.margin.top))
-			if (element is Layout) element.align()
-			width = (element.right.D + element.margin.right.D) - this.x + padding.right
-			if (element.height + padding.horizontal + element.margin.horizontal > height) {
-				height = element.height + element.margin.horizontal + padding.horizontal
+			val preElement = preNotFixedElement(children, element)
+			val preElementRight = preElement?.right?.D ?: (this.left.D + this.padding.left)
+			val marginLeft =
+				(if (preElement != null) preElementRight else this.left.D + this.padding.left) + element.margin.left
+			if (element is ParentElement) element.initialize()
+			if (!element.fixed) {
+				element.setPosition(Vector3d(marginLeft, this.top.D + padding.top + element.margin.top))
+				width += element.width + element.margin.horizontal
+				if (element.height + padding.horizontal + element.margin.horizontal > height) {
+					height = element.height + element.margin.horizontal + padding.horizontal
+				}
 			}
 		}
 		this.width = width.I

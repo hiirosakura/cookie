@@ -24,29 +24,50 @@ import java.util.function.Consumer
 object ScreenManager : Tickable {
 
 	var current: Screen? = null
-		set(value) {
-			field = value
-			BufferRenderer.unbindAll()
-			field?.let {
-				mc.mouse.unlockCursor()
-				InputHandler.unPressAll()
-				KeyBinding.unpressAll()
-				it.initialize()
-				mc.skipGameRender = false
-				mc.updateWindowTitle()
-				return
-			}
-			mc.soundManager.resumeAll()
-			mc.mouse.lockCursor()
+		private set
+
+	fun setCurrent(screen: Screen?) {
+		current = screen
+		BufferRenderer.unbindAll()
+		current?.let {
+			mc.mouse.unlockCursor()
+			InputHandler.unPressAll()
+			KeyBinding.unpressAll()
+			it.initialize()
+			mc.skipGameRender = false
 			mc.updateWindowTitle()
+			return
 		}
+		mc.soundManager.resumeAll()
+		mc.mouse.lockCursor()
+		mc.updateWindowTitle()
+	}
+
+
+	fun setCurrent(screen: Screen?, needInit: Boolean = true) {
+		current = screen
+		BufferRenderer.unbindAll()
+		current?.let {
+			mc.mouse.unlockCursor()
+			InputHandler.unPressAll()
+			KeyBinding.unpressAll()
+			if (needInit)
+				it.initialize()
+			mc.skipGameRender = false
+			mc.updateWindowTitle()
+			return
+		}
+		mc.soundManager.resumeAll()
+		mc.mouse.lockCursor()
+		mc.updateWindowTitle()
+	}
 
 	/**
 	 * 打开一个Screen
 	 * @param scope [@kotlin.ExtensionFunctionType] Function1<ScreenManager, Screen>
 	 */
 	inline fun openScreen(scope: ScreenManager.() -> Screen) {
-		current = scope.invoke(this)
+		setCurrent(scope(this))
 	}
 
 	@JvmStatic
