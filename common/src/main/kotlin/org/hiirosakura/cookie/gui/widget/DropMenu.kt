@@ -1,6 +1,7 @@
 package org.hiirosakura.cookie.gui.widget
 
 import net.minecraft.client.util.math.MatrixStack
+import net.minecraft.text.Text
 import org.hiirosakura.cookie.common.WIDGET_TEXTURE
 import org.hiirosakura.cookie.common.textRenderer
 import org.hiirosakura.cookie.gui.foundation.*
@@ -10,8 +11,10 @@ import org.hiirosakura.cookie.gui.widget.button.IconButton
 import org.hiirosakura.cookie.gui.widget.icon.CookieIcon
 import org.hiirosakura.cookie.gui.widget.text.TextLabel
 import org.hiirosakura.cookie.gui.widget.text.textLabel
+import org.hiirosakura.cookie.util.Direction
 import org.hiirosakura.cookie.util.color.Color4f
 import org.hiirosakura.cookie.util.math.D
+import org.hiirosakura.cookie.util.maxWidth
 import org.hiirosakura.cookie.util.text
 
 /**
@@ -34,18 +37,21 @@ class DropMenu(
 	var expandSize: Int = 10
 ) : AbstractParentElement() {
 
-	override var width: Int = 60
+	private val fixedHeight = 18
+
+	override var width: Int = items.maxWidth() + fixedHeight + 8
 		set(value) {
-			field = value.coerceAtLeast(20)
+			field = value.coerceAtLeast(fixedHeight + 4)
 			list.width = field - 8
 			currentText.width = field
 			x = this@DropMenu.x + this@DropMenu.width - width
 		}
 
-	override val renderLevel: Int = -10
+	override val renderLevel: Int = 10
 	override val handleLevel: Int = 10
 
-	private val fixedHeight = 18
+	var itemTip: (item: String) -> Text? = { null }
+	var itemTipDirection: (item: String) -> Direction? = { null }
 
 	/**
 	 * 高度固定为18
@@ -66,6 +72,7 @@ class DropMenu(
 			}
 		}
 
+	var onToggle: DropMenu.(currentItem: String) -> Unit = {}
 
 	var expanded: Boolean = false
 		set(value) {
@@ -81,7 +88,6 @@ class DropMenu(
 		height = fixedHeight
 		onClick = {
 			expanded = !expanded
-			println("ea")
 		}
 		x = this@DropMenu.x + this@DropMenu.width - width
 		y = this@DropMenu.y
@@ -92,7 +98,7 @@ class DropMenu(
 		y = this@DropMenu.y + 1
 		textColor = Color4f.BLACK
 		padding.set(Padding(left = 4.0, top = 1.0, right = fixedHeight.D))
-		align = Align.CENTER_LEFT
+		align = Align.CenterLeft
 		renderWith = { matrices: MatrixStack, delta: Number ->
 			setShaderTexture(WIDGET_TEXTURE)
 			enableBlend()
@@ -118,37 +124,39 @@ class DropMenu(
 				onClick = {
 					currentItem = str
 					expanded = false
+					onToggle(currentItem)
 				},
-				align = Align.CENTER_LEFT
+				align = Align.CenterLeft
 			) {
+				tip = { itemTip(str) }
+				tipDirection = { itemTipDirection(str) }
 				textColor = Color4f.BLACK
 				renderWith = { matrices, delta ->
-					mouseHover { drawRect(matrices, x, y, this@apply.width - 8, height, Color4f.BLACK.alpha(0.2f)) }
+					mouseHover { drawRect(matrices, x, y, this@apply.width - scrollerBar.width, height, Color4f.BLACK.alpha(0.2f)) }
 					render.invoke(matrices, delta)
 				}
 			}
 		}
 		renderWith = { matrices, delta ->
 			drawRect(matrices, x - 2, y - 2, width + 4, height + 4, Color4f.WHITE)
+			render.invoke(matrices, delta)
 			setShaderTexture(WIDGET_TEXTURE)
 			enableBlend()
 			defaultBlendFunc()
 			enableDepthTest()
-			draw9Texture(matrices, x - 4, y - 4, 4, width + 8, height + 8, 0, 48, 32, 32)
+			draw9Texture(matrices, x - 4, y - 4 - 1, 4, width + 8, height + 8 + 2, 0, 48, 32, 32)
 			disableBlend()
-			render.invoke(matrices, delta)
 		}
 	}
 
 	init {
+		addElement(list)
 		addElement(currentText)
 		addElement(dropButton)
-		addElement(list)
 	}
 
 	override fun initialize() {
 		width += 0
-		height = 0
 		list.x = this.x + 4
 		list.y = this.y + fixedHeight + 4
 		currentText.x = this.x

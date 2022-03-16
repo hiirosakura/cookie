@@ -42,6 +42,19 @@ interface ParentElement : Element, Initializable {
 			return element
 		}
 
+	/**
+	 * 拥有tip的鼠标悬浮元素
+	 * @return Element?
+	 */
+	fun hoveredTipElement(): Element? {
+		hoveredElement?.let {
+			return if (it is ParentElement && it.hoveredTipElement() != null) it.hoveredTipElement()
+			else if (!it.isEmptyTip()) it
+			else null
+		}
+		return null
+	}
+
 	infix fun setInitialFocus(element: Element?) {
 		focused = element
 	}
@@ -92,8 +105,6 @@ interface ParentElement : Element, Initializable {
 			it.active.notc { return true }
 		}
 		focused = hoveredElement
-		if (focused != null)
-			println(focused!!::class.simpleName)
 		if (button == 0) dragging = true
 		return if (focused?.active == true)
 			focused?.mouseClick(mouseX, mouseY, button) ?: true

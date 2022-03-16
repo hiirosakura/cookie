@@ -1,9 +1,11 @@
 package org.hiirosakura.cookie.gui.foundation
 
+import net.minecraft.text.Text
 import org.hiirosakura.cookie.common.Tickable
 import org.hiirosakura.cookie.common.mc
 import org.hiirosakura.cookie.gui.foundation.layout.Margin
 import org.hiirosakura.cookie.gui.foundation.layout.Padding
+import org.hiirosakura.cookie.util.Direction
 import org.hiirosakura.cookie.util.ifc
 import org.hiirosakura.cookie.util.math.D
 import org.hiirosakura.cookie.util.math.Vector3
@@ -59,9 +61,9 @@ interface Element : Drawable, PositionElement, Tickable {
 		}
 
 	override var zOffset: Double
-		get() = this.z
+		get() = position.z
 		set(value) {
-			this.z = value
+			position.z = value
 		}
 
 	/**
@@ -73,6 +75,21 @@ interface Element : Drawable, PositionElement, Tickable {
 	 * 高
 	 */
 	var height: Int
+
+	/**
+	 * 提示
+	 */
+	var tip: () -> Text?
+
+	fun isEmptyTip(): Boolean {
+		tip()?.let { return it.string.isEmpty() }
+		return true
+	}
+
+	/**
+	 * 提示出现的位置 为空则自动选择合适的位置 优先级 up->right->down->left
+	 */
+	var tipDirection: () -> Direction?
 
 	/**
 	 * 左侧的位置

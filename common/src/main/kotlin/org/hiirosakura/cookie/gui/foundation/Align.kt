@@ -16,7 +16,15 @@ package org.hiirosakura.cookie.gui.foundation
  */
 enum class Align {
 
-	TOP_LEFT, TOP_CENTER, TOP_RIGHT,
-	CENTER_LEFT, CENTER, CENTER_RIGHT,
-	BOTTOM_LEFT, BOTTOM_CENTER, BOTTOM_RIGHT
+	TopLeft, TopCenter, TopRight,
+	CenterLeft, Center, CenterRight,
+	BottomLeft, BottomCenter, BottomRight
+}
+
+enum class HorizontalAlign {
+	Left, Center, Right,
+}
+
+enum class VerticalAlign {
+	Top, Center, Bottom,
 }

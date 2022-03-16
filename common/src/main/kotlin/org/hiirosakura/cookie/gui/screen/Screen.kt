@@ -1,6 +1,7 @@
 package org.hiirosakura.cookie.gui.screen
 
 import net.minecraft.client.Mouse
+import net.minecraft.client.util.math.MatrixStack
 import org.hiirosakura.cookie.common.mc
 import org.hiirosakura.cookie.gui.foundation.ParentElement
 import org.hiirosakura.cookie.util.ifc
@@ -41,6 +42,8 @@ interface Screen : ParentElement {
 	 * 关闭当前Screen
 	 */
 	fun close() = onClose().ifc { ScreenManager.setCurrent(this.parentScreen) }
+
+	fun renderTip(matrices: MatrixStack, delta: Number)
 
 	fun resize(width: Number, height: Number) {}
 

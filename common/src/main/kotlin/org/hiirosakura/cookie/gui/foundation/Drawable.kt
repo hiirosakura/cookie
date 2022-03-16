@@ -6,6 +6,7 @@ import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.text.Text
 import net.minecraft.util.Identifier
 import org.hiirosakura.cookie.common.textRenderer
+import org.hiirosakura.cookie.gui.foundation.HorizontalAlign.*
 import org.hiirosakura.cookie.util.color.Color
 import org.hiirosakura.cookie.util.color.Color4f
 import org.hiirosakura.cookie.util.math.D
@@ -36,7 +37,7 @@ interface Drawable {
 	val zOffset: Double get() = 0.0
 
 	/**
-	 * 渲染优先级 越低越先渲染
+	 * 渲染优先级 越高越先渲染
 	 */
 	val renderLevel: Int get() = 0
 
@@ -346,6 +347,67 @@ fun Drawable.drawCenteredText(
 		rightToLeft
 	)
 	immediate.draw()
+}
+
+fun Drawable.drawStringLines(
+	matrices: MatrixStack,
+	lines: List<String>,
+	x: Number,
+	y: Number,
+	lineSpacing: Number = 1,
+	color: Color<out Number> = Color4f.BLACK,
+	shadow: Boolean = false,
+	align: HorizontalAlign = Left,
+	rightToLeft: Boolean = false
+) {
+	val drawText: (text: String, x: Float, y: Float) -> Unit = { text, x, y ->
+		val immediate = VertexConsumerProvider.immediate(Tessellator.getInstance().buffer)
+		textRenderer.draw(
+			text, x, y, color.rgba, shadow, matrices.peek().positionMatrix, immediate, false, 0,
+			LightmapTextureManager.MAX_LIGHT_COORDINATE,
+			rightToLeft
+		)
+		immediate.draw()
+	}
+	var textY = y.F
+	when (align) {
+		Left -> {
+			val textX = x.F
+			for (text in lines) {
+				drawText(text, textX, textY)
+				textY += textRenderer.fontHeight + lineSpacing.F
+			}
+		}
+		Center -> {
+			for (text in lines) {
+				val textX = x.F - (textRenderer.getWidth(text) / 2)
+				drawText(text, textX, textY)
+				textY += textRenderer.fontHeight + lineSpacing.F
+			}
+		}
+		Right -> {
+			for (text in lines) {
+				val textX = x.F - textRenderer.getWidth(text)
+				drawText(text, textX, textY)
+				textY += textRenderer.fontHeight + lineSpacing.F
+			}
+		}
+	}
+
+}
+
+fun Drawable.drawTextLines(
+	matrices: MatrixStack,
+	lines: List<Text>,
+	x: Number,
+	y: Number,
+	lineSpacing: Number = 1,
+	color: Color<out Number> = Color4f.BLACK,
+	shadow: Boolean = false,
+	align: HorizontalAlign = Left,
+	rightToLeft: Boolean = false
+) {
+	drawStringLines(matrices, ArrayList<String>().apply { lines.forEach { add(it.string) } }, x, y, lineSpacing, color, shadow, align, rightToLeft)
 }
 
 fun Drawable.setShader(shaderSupplier: KFunction0<Shader?>) = RenderSystem.setShader(shaderSupplier)

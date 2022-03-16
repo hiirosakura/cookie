@@ -41,7 +41,7 @@ class TextLabel(
 		height
 	)
 
-	var align: Align = CENTER
+	var align: Align = Center
 
 	private val textWidth: Int get() = textRenderer.getWidth(this.text())
 	private val textHeight: Int get() = textRenderer.fontHeight
@@ -73,39 +73,39 @@ class TextLabel(
 		val textX: Double
 		val textY: Double
 		when (align) {
-			TOP_LEFT -> {
+			TopLeft -> {
 				textX = this.x + padding.left
 				textY = this.y + padding.top
 			}
-			TOP_CENTER -> {
+			TopCenter -> {
 				textX = centerX - textWidth / 2
 				textY = this.y + padding.top
 			}
-			TOP_RIGHT -> {
+			TopRight -> {
 				textX = this.x + this.width - textWidth - padding.right
 				textY = this.y + padding.top
 			}
-			CENTER_LEFT -> {
+			CenterLeft -> {
 				textX = this.x + padding.left
 				textY = centerY - textHeight / 2
 			}
-			CENTER -> {
+			Center -> {
 				textX = centerX - textWidth / 2
 				textY = centerY - textHeight / 2
 			}
-			CENTER_RIGHT -> {
+			CenterRight -> {
 				textX = this.x + this.width - textWidth - padding.right
 				textY = centerY - textHeight / 2
 			}
-			BOTTOM_LEFT -> {
+			BottomLeft -> {
 				textX = this.x + padding.left
 				textY = this.y - textHeight - padding.bottom
 			}
-			BOTTOM_CENTER -> {
+			BottomCenter -> {
 				textX = centerX - textWidth / 2
 				textY = this.y - textHeight - padding.bottom
 			}
-			BOTTOM_RIGHT -> {
+			BottomRight -> {
 				textX = this.x + this.width - textWidth - padding.right
 				textY = this.y - textHeight - padding.bottom
 			}
@@ -134,7 +134,7 @@ inline fun ParentElement.textLabel(
 	width: Int = textRenderer.getWidth(text),
 	height: Int = textRenderer.fontHeight,
 	noinline onClick: TextLabel.(Int) -> Unit = { },
-	align: Align = CENTER,
+	align: Align = Center,
 	shadow: Boolean = false,
 	rightToLeft: Boolean = false,
 	backgroundColor: Color<out Number> = Color4i.BLACK.apply { alpha = 0 },
@@ -148,7 +148,7 @@ inline fun ParentElement.textLabel(
 	width: Int = textRenderer.getWidth(text()),
 	height: Int = textRenderer.fontHeight,
 	noinline onClick: TextLabel.(Int) -> Unit = { },
-	align: Align = CENTER,
+	align: Align = Center,
 	shadow: Boolean = false,
 	rightToLeft: Boolean = false,
 	backgroundColor: Color<out Number> = Color4i.BLACK.apply { alpha = 0 },

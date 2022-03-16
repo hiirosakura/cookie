@@ -12,6 +12,7 @@ import org.hiirosakura.cookie.gui.widget.dropMenu
 import org.hiirosakura.cookie.input.InputHandler
 import org.hiirosakura.cookie.input.KeyBind
 import org.hiirosakura.cookie.platform.MultiPlatformFun
+import org.hiirosakura.cookie.util.Direction
 import org.hiirosakura.cookie.util.color.Color4f
 import org.hiirosakura.cookie.util.text
 import org.lwjgl.glfw.GLFW
@@ -57,6 +58,8 @@ object Cookie : ModInfo, Initializable {
 						fixed = true
 						x = 300.0
 						y = 20.0
+						itemTip = { "${it}的tip".text }
+						itemTipDirection = { Direction.Left }
 					}
 					column(
 						padding = Padding(top = 30.0)
@@ -84,6 +87,13 @@ object Cookie : ModInfo, Initializable {
 									render.invoke(matrices, delta)
 								}
 							}
+							dropMenu(list, list[0]) {
+								fixed = true
+								x = 20.0
+								y = 40.0
+								itemTip = { "${it}的tip".text }
+								itemTipDirection = { Direction.Left }
+							}
 							for (s in list) {
 								button(
 									text = s,
@@ -91,6 +101,13 @@ object Cookie : ModInfo, Initializable {
 										println("我是${text.string}")
 									}
 								) {
+									if (s == "按钮5") tip = {
+										"""
+										|测试啊
+										|超长的文本测试................
+										|超长的文本测试2................${'\n'}换行
+										""".trimMargin("|").text
+									}
 									this.margin.set(Margin(top = 2.0))
 								}
 							}

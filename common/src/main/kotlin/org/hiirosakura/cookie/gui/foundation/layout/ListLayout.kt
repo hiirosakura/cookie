@@ -46,10 +46,10 @@ class ListLayout(width: Int = 0, height: Int = 0) : Layout() {
 	val contentSize: Int
 		get() {
 			return if (horizontal) {
-				if (fixedWidth) width - scrollerBar.width
+				if (fixedWidth) height - scrollerBar.height
 				else width
 			} else {
-				if (fixedHeight) height - scrollerBar.height
+				if (fixedHeight) width - scrollerBar.width
 				else height
 			}
 		}

@@ -1,10 +1,12 @@
 package org.hiirosakura.cookie.gui.foundation
 
 import net.minecraft.client.util.math.MatrixStack
+import net.minecraft.text.Text
 import org.hiirosakura.cookie.gui.foundation.layout.Margin
 import org.hiirosakura.cookie.gui.foundation.layout.Modifiable
 import org.hiirosakura.cookie.gui.foundation.layout.Padding
 import org.hiirosakura.cookie.gui.screen.ScreenManager
+import org.hiirosakura.cookie.util.Direction
 import org.hiirosakura.cookie.util.math.Vector3
 import org.hiirosakura.cookie.util.math.Vector3d
 
@@ -27,6 +29,10 @@ abstract class AbstractElement : Element, Modifiable {
 	override val position: Vector3<Double> = Vector3d()
 
 	override var visible: Boolean = true
+
+	override var tip: () -> Text? = { null }
+
+	override var tipDirection: () -> Direction? = { null }
 
 	override var handleLevel: Int = 0
 
