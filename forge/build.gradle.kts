@@ -21,7 +21,6 @@ dependencies {
 	forgeRuntimeLibrary(kotlin("stdlib-jdk8"))
 	forgeRuntimeLibrary(kotlin("reflect"))
 	modApi("dev.latvian.mods:rhino-forge:${rootProject.properties["rhino_version"]}")
-	compileOnly("org.openjdk.nashorn:nashorn-core:15.3")
 	implementation(project(":common", configuration = "namedElements")) { isTransitive = false }
 	"developmentForge"(project(":common", configuration = "namedElements")) { isTransitive = false }
 	shadowCommon(project(":common", configuration = "transformProductionForge")) { isTransitive = false }

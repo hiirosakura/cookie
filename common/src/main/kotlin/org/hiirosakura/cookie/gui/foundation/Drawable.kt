@@ -7,6 +7,7 @@ import net.minecraft.text.Text
 import net.minecraft.util.Identifier
 import org.hiirosakura.cookie.common.textRenderer
 import org.hiirosakura.cookie.gui.foundation.HorizontalAlign.*
+import org.hiirosakura.cookie.gui.texture.GuiTexture
 import org.hiirosakura.cookie.util.color.Color
 import org.hiirosakura.cookie.util.color.Color4f
 import org.hiirosakura.cookie.util.math.D
@@ -232,6 +233,14 @@ fun Drawable.draw9Texture(
 	textureWidth: Int = 256,
 	textureHeight: Int = 256
 ) {
+	if (cornerLeftWidth == 0 &&
+		cornerRightWidth == 0 &&
+		cornerTopHeight == 0 &&
+		cornerBottomHeight == 0
+	) {
+		drawTexture(matrices, x, y, width, height, u, v, regionWidth, regionHeight, textureWidth, textureHeight)
+	}
+
 	/**
 	 * centerWidth
 	 */
@@ -314,6 +323,41 @@ fun Drawable.draw9Texture(
 		textureWidth,
 		textureHeight
 	)
+}
+
+fun Drawable.drawTexture(
+	matrices: MatrixStack,
+	x: Number,
+	y: Number,
+	width: Number,
+	height: Number,
+	texture: GuiTexture,
+	shaderColor: Color<out Number> = Color4f.WHITE
+) {
+	setShaderTexture(texture.texture)
+	enableBlend()
+	defaultBlendFunc()
+	enableDepthTest()
+	setShaderColor(shaderColor)
+	draw9Texture(
+		matrices,
+		x,
+		y,
+		texture.corner.left,
+		texture.corner.right,
+		texture.corner.top,
+		texture.corner.bottom,
+		width,
+		height,
+		texture.u,
+		texture.v,
+		texture.regionWidth,
+		texture.regionHeight,
+		texture.textureWidth,
+		texture.textureHeight
+	)
+	disableBlend()
+	setShaderColor(Color4f.WHITE)
 }
 
 
@@ -420,10 +464,7 @@ fun Drawable.enableTexture() = RenderSystem.enableTexture()
 
 fun Drawable.disableTexture() = RenderSystem.disableTexture()
 
-fun Drawable.setShaderColor(color: Color<out Number>) {
-	val color4f = Color4f().fromInt(color.rgba)
-	setShaderColor(color4f)
-}
+fun Drawable.setShaderColor(color: Color<out Number>) = setShaderColor(Color4f().fromInt(color.rgba))
 
 fun Drawable.setShaderColor(color: Color4f) = RenderSystem.setShaderColor(color.red, color.green, color.blue, color.alpha)
 

@@ -106,10 +106,8 @@ interface ParentElement : Element, Initializable {
 		}
 		focused = hoveredElement
 		if (button == 0) dragging = true
-		return if (focused?.active == true)
-			focused?.mouseClick(mouseX, mouseY, button) ?: true
-		else
-			true
+		return if (focused?.active == true) focused?.mouseClick(mouseX, mouseY, button) ?: true
+		else true
 	}
 
 	override fun mouseRelease(mouseX: Number, mouseY: Number, button: Int): Boolean {

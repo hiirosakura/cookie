@@ -73,6 +73,70 @@ object JsonUtil {
 	fun Any.toJsonObject(): JsonObject {
 		return gson.toJsonTree(this).asJsonObject
 	}
+
+	inline fun <reified T> JsonObject.getOr(key: String, or: T): T {
+		this.has(key).ifc {
+			try {
+				return gson.fromJson(this.get(key), T::class.java)
+			} catch (_: Exception) {
+			}
+		}
+		return or
+	}
+
+	fun JsonObject.getOr(key: String, or: Number): Number {
+		this.has(key).ifc {
+			try {
+				return this.get(key).asNumber
+			} catch (e: Exception) {
+				e.printStackTrace()
+			}
+		}
+		return or
+	}
+
+	fun JsonObject.getOr(key: String, or: Boolean): Boolean {
+		this.has(key).ifc {
+			try {
+				return this.get(key).asBoolean
+			} catch (e: Exception) {
+				e.printStackTrace()
+			}
+		}
+		return or
+	}
+
+	fun JsonObject.getOr(key: String, or: String): String {
+		this.has(key).ifc {
+			try {
+				return this.get(key).asString
+			} catch (e: Exception) {
+				e.printStackTrace()
+			}
+		}
+		return or
+	}
+
+	fun JsonObject.getOr(key: String, or: JsonObject): JsonObject {
+		this.has(key).ifc {
+			try {
+				return this.get(key).asJsonObject
+			} catch (_: Exception) {
+			}
+		}
+		return or
+	}
+
+	fun JsonObject.getOr(key: String, or: JsonArray): JsonArray {
+		this.has(key).ifc {
+			try {
+				return this.get(key).asJsonArray
+			} catch (_: Exception) {
+			}
+		}
+		return or
+	}
+
 }
 
 class JsonObjectScope {

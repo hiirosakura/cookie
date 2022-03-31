@@ -1,6 +1,7 @@
 package org.hiirosakura.cookie.initialize
 
 import org.hiirosakura.cookie.config.ConfigManager
+import org.hiirosakura.cookie.gui.texture.GuiTextures
 
 /**
  * 客户端初始化
@@ -26,6 +27,7 @@ fun initialing() {
 	println("Cookie initialing...")
 
 	ConfigManager.initialize()
+	GuiTextures.initialize()
 }
 
 /**

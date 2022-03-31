@@ -1,8 +1,9 @@
 package org.hiirosakura.cookie.gui.widget
 
 import net.minecraft.client.util.math.MatrixStack
-import org.hiirosakura.cookie.common.WIDGET_TEXTURE
-import org.hiirosakura.cookie.gui.foundation.*
+import org.hiirosakura.cookie.gui.foundation.ParentElement
+import org.hiirosakura.cookie.gui.foundation.drawTexture
+import org.hiirosakura.cookie.gui.texture.GuiTextures
 import org.hiirosakura.cookie.util.clamp
 import org.hiirosakura.cookie.util.ifc
 import org.hiirosakura.cookie.util.math.D
@@ -21,7 +22,7 @@ import org.hiirosakura.cookie.util.math.D
  * @author forpleuvoir
 
  */
-open class ScrollerBar : AbstractElement() {
+open class ScrollerBar : ClickableElement() {
 
 	/**
 	 * 是否为水平滚动条
@@ -86,7 +87,7 @@ open class ScrollerBar : AbstractElement() {
 		}
 
 	override var mouseClick: (mouseX: Number, mouseY: Number, button: Int) -> Boolean = { mouseX, mouseY, button ->
-		onClick(button)
+		super.mouseClick.invoke(mouseX, mouseY, button)
 		setAmountFromMouse(mouseX, mouseY)
 		false
 	}
@@ -107,13 +108,8 @@ open class ScrollerBar : AbstractElement() {
 
 	override val render: (matrices: MatrixStack, delta: Number) -> Unit = { matrices, delta ->
 		shouldRender.ifc {
-			setShaderTexture(WIDGET_TEXTURE)
-			enableBlend()
-			defaultBlendFunc()
-			enableDepthTest()
 			renderBackground(matrices, delta)
 			renderBar(matrices, delta)
-			disableBlend()
 		}
 	}
 
@@ -122,17 +118,17 @@ open class ScrollerBar : AbstractElement() {
 			val height = (percent() * this.height)
 			val maxScrollLength = this.height - height
 			val posY = this.y + ((this.amount / this.maxAmount()) * maxScrollLength).toInt()
-			draw9Texture(matrices, x, posY, 4, width, height, 0, 0, 16, 16)
+			drawTexture(matrices, x, posY, width, height, GuiTextures.SCROLLER_BAR_VERTICAL)
 		} else {
 			val width = (percent() * this.width)
 			val maxScrollLength = this.width - width
 			val posX = this.x + ((this.amount / this.maxAmount()) * maxScrollLength).toInt()
-			draw9Texture(matrices, posX, y, 4, width, height + 1, 0, 0, 16, 16)
+			drawTexture(matrices, posX, y, width, height, GuiTextures.SCROLLER_BAR_HORIZONTAL)
 		}
 	}
 
 	protected open fun renderBackground(matrices: MatrixStack, delta: Number) {
-		draw9Texture(matrices, x, y, 4, width, height, 32, 0, 16, 16)
+		drawTexture(matrices, x, y, width, height, GuiTextures.SCROLLER_BACKGROUND)
 	}
 
 }

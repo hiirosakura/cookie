@@ -32,7 +32,6 @@ dependencies {
 	modApi("net.fabricmc:fabric-language-kotlin:${rootProject.properties["fabric_kotlin_version"]}")
 	modApi("dev.latvian.mods:rhino-fabric:${rootProject.properties["rhino_version"]}")
 	modLocalRuntime(modCompileOnly("com.terraformersmc:modmenu:${rootProject.properties["mod_menu_version"]}")!!)
-	modImplementation("org.openjdk.nashorn:nashorn-core:15.3")
 	implementation(project(":common", configuration = "namedElements")) { isTransitive = false }
 	"developmentFabric"(project(":common", configuration = "namedElements")) { isTransitive = false }
 	shadowCommon(project(":common", configuration = "transformProductionFabric")) { isTransitive = false }

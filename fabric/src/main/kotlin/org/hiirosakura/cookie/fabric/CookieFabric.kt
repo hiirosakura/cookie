@@ -2,7 +2,6 @@ package org.hiirosakura.cookie.fabric
 
 import net.fabricmc.api.ClientModInitializer
 import org.hiirosakura.cookie.mod.Cookie
-import javax.script.ScriptEngineManager
 
 /**
  *
@@ -22,14 +21,6 @@ object CookieFabric : ClientModInitializer {
 
 	override fun onInitializeClient() {
 		Cookie.initialize()
-		val scriptEngine = ScriptEngineManager().getEngineByName("nashorn")
-		scriptEngine.eval(
-			"""
-			var i = 0;
-			i++;
-		
-		""".trimIndent()
-		)
 	}
 
 

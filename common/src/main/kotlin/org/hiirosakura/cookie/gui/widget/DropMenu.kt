@@ -2,11 +2,11 @@ package org.hiirosakura.cookie.gui.widget
 
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.text.Text
-import org.hiirosakura.cookie.common.WIDGET_TEXTURE
 import org.hiirosakura.cookie.common.textRenderer
 import org.hiirosakura.cookie.gui.foundation.*
 import org.hiirosakura.cookie.gui.foundation.layout.ListLayout
 import org.hiirosakura.cookie.gui.foundation.layout.Padding
+import org.hiirosakura.cookie.gui.texture.GuiTextures
 import org.hiirosakura.cookie.gui.widget.button.IconButton
 import org.hiirosakura.cookie.gui.widget.icon.CookieIcon
 import org.hiirosakura.cookie.gui.widget.text.TextLabel
@@ -84,7 +84,7 @@ class DropMenu(
 
 	val dropButton: IconButton = IconButton(CookieIcon.Left).apply {
 		handleLevel = 10
-		width = fixedHeight
+		width = fixedHeight - 1
 		height = fixedHeight
 		onClick = {
 			expanded = !expanded
@@ -97,15 +97,10 @@ class DropMenu(
 		x = this@DropMenu.x
 		y = this@DropMenu.y + 1
 		textColor = Color4f.BLACK
-		padding.set(Padding(left = 4.0, top = 1.0, right = fixedHeight.D))
+		padding.set(Padding(left = 4.0, top = 0.5, right = fixedHeight.D))
 		align = Align.CenterLeft
 		renderWith = { matrices: MatrixStack, delta: Number ->
-			setShaderTexture(WIDGET_TEXTURE)
-			enableBlend()
-			defaultBlendFunc()
-			enableDepthTest()
-			draw9Texture(matrices, this@apply.x, this@apply.y, 4, width, height, 48, 0, 16, 16)
-			disableBlend()
+			drawTexture(matrices, this@apply.x, this@apply.y, width, height, GuiTextures.TEXT_FIELD)
 			render.invoke(matrices, delta)
 		}
 	}
@@ -140,12 +135,7 @@ class DropMenu(
 		renderWith = { matrices, delta ->
 			drawRect(matrices, x - 2, y - 2, width + 4, height + 4, Color4f.WHITE)
 			render.invoke(matrices, delta)
-			setShaderTexture(WIDGET_TEXTURE)
-			enableBlend()
-			defaultBlendFunc()
-			enableDepthTest()
-			draw9Texture(matrices, x - 4, y - 4 - 1, 4, width + 8, height + 8 + 2, 0, 48, 32, 32)
-			disableBlend()
+			drawTexture(matrices, x - 4, y - 4 - 1, width + 8, height + 8 + 2, GuiTextures.BORDER)
 		}
 	}
 

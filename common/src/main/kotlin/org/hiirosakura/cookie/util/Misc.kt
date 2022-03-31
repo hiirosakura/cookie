@@ -1,5 +1,7 @@
 package org.hiirosakura.cookie.util
 
+import net.minecraft.util.Identifier
+import org.hiirosakura.cookie.mod.Cookie
 import java.util.stream.Stream
 
 /**
@@ -16,6 +18,9 @@ import java.util.stream.Stream
  * @author forpleuvoir
 
  */
+
+
+fun resources(path: String): Identifier = Identifier(Cookie.id, path)
 
 /**
  * 如果是的话执行action

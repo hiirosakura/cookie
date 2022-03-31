@@ -1,13 +1,15 @@
 package org.hiirosakura.cookie.gui.widget.button
 
-import net.minecraft.client.sound.PositionedSoundInstance
 import net.minecraft.client.util.math.MatrixStack
-import net.minecraft.sound.SoundEvents
 import net.minecraft.text.Text
-import org.hiirosakura.cookie.common.WIDGET_TEXTURE
-import org.hiirosakura.cookie.common.soundManager
 import org.hiirosakura.cookie.common.textRenderer
-import org.hiirosakura.cookie.gui.foundation.*
+import org.hiirosakura.cookie.gui.foundation.ParentElement
+import org.hiirosakura.cookie.gui.foundation.drawCenteredText
+import org.hiirosakura.cookie.gui.foundation.drawTexture
+import org.hiirosakura.cookie.gui.texture.GuiTextures.BUTTON_1
+import org.hiirosakura.cookie.gui.texture.GuiTextures.BUTTON_1_HOVERED
+import org.hiirosakura.cookie.gui.texture.GuiTextures.BUTTON_1_PRESSED
+import org.hiirosakura.cookie.gui.widget.ClickableElement
 import org.hiirosakura.cookie.util.color.Color
 import org.hiirosakura.cookie.util.color.Color4f
 import org.hiirosakura.cookie.util.text
@@ -26,7 +28,7 @@ import org.hiirosakura.cookie.util.text
  * @author forpleuvoir
 
  */
-abstract class Button(var text: Text = "".text) : AbstractElement() {
+abstract class Button(var text: Text = "".text) : ClickableElement() {
 
 	constructor(text: String = "") : this(text(text))
 
@@ -41,13 +43,15 @@ abstract class Button(var text: Text = "".text) : AbstractElement() {
 
 	var buttonColor: Color<out Number> = Color4f.WHITE
 
+
 	override val render: (matrices: MatrixStack, delta: Number) -> Unit = { matrices, delta ->
 		drawBackground(matrices, delta)
+		val textY = status(y - 1, y - 2, y)
 		drawCenteredText(
 			matrices,
 			text,
 			x,
-			if (active) y - 1 else y,
+			textY,
 			width,
 			height,
 			color = Color4f.BLACK.alpha(if (active) 0.9f else 0.6f),
@@ -56,20 +60,8 @@ abstract class Button(var text: Text = "".text) : AbstractElement() {
 	}
 
 	protected open fun drawBackground(matrices: MatrixStack, delta: Number) {
-		setShaderTexture(WIDGET_TEXTURE)
-		enableBlend()
-		defaultBlendFunc()
-		enableDepthTest()
-		setShaderColor(buttonColor)
-		val u = if (active) if (mouseHover()) 16 else 0 else 32
-		draw9Texture(matrices, x, y, 4, width, height, 16, u, 16, 16)
-		disableBlend()
-	}
-
-	override var mouseClick: (mouseX: Number, mouseY: Number, button: Int) -> Boolean = { _, _, button ->
-		if (button == 0) soundManager.play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0f))
-		onClick.invoke(button)
-		true
+		val texture = status(BUTTON_1, BUTTON_1_HOVERED, BUTTON_1_PRESSED)
+		drawTexture(matrices, x, y, width, height, texture, buttonColor)
 	}
 
 }

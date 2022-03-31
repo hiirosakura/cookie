@@ -1,8 +1,8 @@
 package org.hiirosakura.cookie.gui.widget.button
 
 import net.minecraft.client.util.math.MatrixStack
-import org.hiirosakura.cookie.common.WIDGET_TEXTURE
-import org.hiirosakura.cookie.gui.foundation.*
+import org.hiirosakura.cookie.gui.foundation.drawTexture
+import org.hiirosakura.cookie.gui.texture.GuiTextures
 import org.hiirosakura.cookie.gui.widget.icon.Icon
 
 /**
@@ -29,17 +29,12 @@ open class IconButton(var icon: Icon) : Button("") {
 	}
 
 	override fun drawBackground(matrices: MatrixStack, delta: Number) {
-		setShaderTexture(WIDGET_TEXTURE)
-		enableBlend()
-		defaultBlendFunc()
-		enableDepthTest()
-		setShaderColor(buttonColor)
-		val u = if (active) if (mouseHover()) 16 else 0 else 32
-		draw9Texture(matrices, x, y, 4, width, height, 0, u, 16, 16)
-		disableBlend()
+		val texture = status(GuiTextures.BUTTON_0, GuiTextures.BUTTON_0_HOVERED, GuiTextures.BUTTON_0_PRESSED)
+		drawTexture(matrices, x, y, width, height, texture, buttonColor)
 	}
 
 	var renderIcon: (matrices: MatrixStack, delta: Number, icon: Icon) -> Unit = { matrices, delta, icon ->
-		icon.render(matrices, delta, this.x + (width - icon.size) / 2, this.y + (height - icon.size) / 2 - 1, icon.size)
+		val iconY = status(this.y + (height - icon.size) / 2 - 1, this.y + (height - icon.size) / 2 - 1, this.y + (height - icon.size) / 2)
+		icon.render(matrices, delta, this.x + (width - icon.size) / 2, iconY, icon.size)
 	}
 }
