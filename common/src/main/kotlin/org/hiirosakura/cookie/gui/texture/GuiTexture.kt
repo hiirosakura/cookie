@@ -44,8 +44,7 @@ class GuiTexture(
 				val textureWidth = obj.getOr("texture_width", default.textureWidth).I
 				val textureHeight = obj.getOr("texture_height", default.textureHeight).I
 				GuiTexture(texture, corner, u, v, regionWidth, regionHeight, textureWidth, textureHeight)
-			} catch (e: Exception) {
-				e.printStackTrace()
+			} catch (_: Exception) {
 				default
 			}
 
@@ -95,8 +94,7 @@ class Corner(
 						Corner(it.asInt)
 					}
 				else throw Exception()
-			} catch (e: Exception) {
-				e.printStackTrace()
+			} catch (_: Exception) {
 				default
 			}
 

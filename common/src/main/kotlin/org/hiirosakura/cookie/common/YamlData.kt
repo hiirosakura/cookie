@@ -7,15 +7,16 @@ package org.hiirosakura.cookie.common
 
  * 包名 org.hiirosakura.cookie.common
 
- * 文件名 Initializable
+ * 文件名 YamlData
 
- * 创建时间 2022/2/16 14:39
+ * 创建时间 2022/4/17 15:18
 
  * @author forpleuvoir
 
  */
-interface Initializable {
+interface YamlData {
 
-	fun initialize()
+	val asYamlData: String
 
+	fun setValueFromYaml(yamlData: String)
 }

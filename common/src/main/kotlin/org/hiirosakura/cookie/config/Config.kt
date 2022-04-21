@@ -17,7 +17,7 @@ import org.hiirosakura.cookie.common.*
  * @author forpleuvoir
 
  */
-interface Config<T> : ConfigValue<T>, Initializable, Resettable, Notifiable<Config<T>>, Matchable, JsonData {
+interface Config<T> : ConfigValue<T>, Initialization, Resettable, Notifiable<Config<T>>, Matchable, JsonData {
 
 	val type: IConfigType
 

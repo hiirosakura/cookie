@@ -30,12 +30,12 @@ class MutableValue<T>(val key: String, private val screen: Screen, private var o
 
 	@Suppress("UNCHECKED_CAST")
 	operator fun getValue(thisRef: Any?, kProperty: KProperty<*>): T {
-		return screen.remembers[key] as T
+		return screen.rememberValue[key] as T
 	}
 
 	operator fun setValue(thisRef: Any?, kProperty: KProperty<*>, value: T) {
-		if (screen.remembers[key] != value) {
-			screen.remembers[key] = value
+		if (screen.rememberValue[key] != value) {
+			screen.rememberValue[key] = value
 			onChanged()
 		}
 	}
@@ -43,7 +43,7 @@ class MutableValue<T>(val key: String, private val screen: Screen, private var o
 	@Suppress("UNCHECKED_CAST")
 	override fun onChanged() {
 		screen.initialize()
-		onValueChanged(screen.remembers[key] as T)
+		onValueChanged(screen.rememberValue[key] as T)
 	}
 
 }
@@ -187,31 +187,31 @@ class DelegateMutableMap<K, V>(
 
 @Suppress("UNCHECKED_CAST")
 fun <T> Screen.rememberValueOf(key: String, value: T, onValueChanged: (T) -> Unit = {}): MutableValue<T> {
-	return if (remembers.containsKey(key)) {
+	return if (rememberValue.containsKey(key)) {
 		MutableValue(key, this, onValueChanged)
 	} else {
-		remembers[key] = value as Any
+		rememberValue[key] = value as Any
 		MutableValue(key, this, onValueChanged)
 	}
 }
 
 @Suppress("UNCHECKED_CAST")
 fun <T> Screen.rememberListOf(key: String, list: MutableList<T>, onValueChanged: (MutableList<T>) -> Unit = {}): MutableList<T> {
-	return if (remembers.containsKey(key)) {
-		DelegateMutableList(remembers[key] as MutableList<T>, this, onValueChanged)
+	return if (rememberValue.containsKey(key)) {
+		DelegateMutableList(rememberValue[key] as MutableList<T>, this, onValueChanged)
 	} else {
-		remembers[key] = list as Any
-		DelegateMutableList(remembers[key] as MutableList<T>, this, onValueChanged)
+		rememberValue[key] = list as Any
+		DelegateMutableList(rememberValue[key] as MutableList<T>, this, onValueChanged)
 	}
 }
 
 @Suppress("UNCHECKED_CAST")
 fun <K, V> Screen.rememberMapOf(key: String, list: MutableMap<K, V>, onValueChanged: (MutableMap<K, V>) -> Unit = {}): MutableMap<K, V> {
-	return if (remembers.containsKey(key)) {
-		DelegateMutableMap(remembers[key] as MutableMap<K, V>, this, onValueChanged)
+	return if (rememberValue.containsKey(key)) {
+		DelegateMutableMap(rememberValue[key] as MutableMap<K, V>, this, onValueChanged)
 	} else {
-		remembers[key] = list as Any
-		DelegateMutableMap(remembers[key] as MutableMap<K, V>, this, onValueChanged)
+		rememberValue[key] = list as Any
+		DelegateMutableMap(rememberValue[key] as MutableMap<K, V>, this, onValueChanged)
 	}
 }
 

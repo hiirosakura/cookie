@@ -1,7 +1,7 @@
 package org.hiirosakura.cookie.gui.foundation
 
 import net.minecraft.client.util.math.MatrixStack
-import org.hiirosakura.cookie.common.Initializable
+import org.hiirosakura.cookie.common.Initialization
 import org.hiirosakura.cookie.util.fe
 import org.hiirosakura.cookie.util.math.D
 import org.hiirosakura.cookie.util.notc
@@ -21,7 +21,7 @@ import java.util.*
  * @author forpleuvoir
 
  */
-interface ParentElement : Element, Initializable {
+interface ParentElement : Element, Initialization {
 
 	fun children(): List<Element> = children
 

@@ -2,7 +2,7 @@ package org.hiirosakura.cookie.config.options
 
 import com.google.common.collect.Lists
 import com.google.gson.JsonElement
-import net.minecraft.text.Text
+import net.minecraft.text.TranslatableText
 import org.hiirosakura.cookie.common.CookieLogger
 import org.hiirosakura.cookie.config.Config
 import org.hiirosakura.cookie.mod.CookieLang
@@ -24,13 +24,14 @@ import org.hiirosakura.cookie.util.tText
  */
 abstract class ConfigBase<T> : Config<T> {
 
+	@Suppress("")
 	protected val log = CookieLogger.getLogger(this::class.java)
 
 	protected open val onChangedCallback: MutableList<Config<T>.() -> Unit> = Lists.newArrayList()
 
-	override val remark: Text by lazy { "${key}.remark".tText }
+	override val remark: TranslatableText by lazy { "${displayKey.key}.remark".tText }
 
-	override val displayKey: Text
+	override val displayKey: TranslatableText
 		get() = key.tText
 
 	override fun initialize() {}
@@ -86,6 +87,10 @@ abstract class ConfigBase<T> : Config<T> {
 		}
 	}
 
+	/**
+	 * 设置值修改时的回调
+	 * @param callback [@kotlin.ExtensionFunctionType] Function1<Config<T>, Unit>
+	 */
 	override fun setOnChangedCallback(callback: Config<T>.() -> Unit) {
 		onChangedCallback.add(callback)
 	}

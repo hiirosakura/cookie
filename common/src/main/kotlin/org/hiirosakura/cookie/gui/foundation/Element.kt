@@ -5,11 +5,14 @@ import org.hiirosakura.cookie.common.Tickable
 import org.hiirosakura.cookie.common.mc
 import org.hiirosakura.cookie.gui.foundation.layout.Margin
 import org.hiirosakura.cookie.gui.foundation.layout.Padding
+import org.hiirosakura.cookie.gui.screen.Screen
 import org.hiirosakura.cookie.util.Direction
 import org.hiirosakura.cookie.util.ifc
 import org.hiirosakura.cookie.util.math.D
 import org.hiirosakura.cookie.util.math.Vector3
 import java.util.stream.Stream
+import kotlin.reflect.KProperty
+import kotlin.reflect.full.memberProperties
 
 
 /**
@@ -216,6 +219,22 @@ interface Element : Drawable, PositionElement, Tickable {
 	override fun tick() {
 		if (!active) return
 	}
+}
+
+fun Element.rememberProperty(screen: Screen, key: String, properties: Element.() -> Set<KProperty<*>>) {
+	screen.run {
+		pushPreInitAction {
+			screen.rememberProperties[key] = HashSet(this.properties())
+		}
+		pushInitializedAction {
+
+		}
+	}
+
+}
+
+fun Element.rememberProperty(screen: Screen, key: String) {
+	this.rememberProperty(screen, key) { HashSet(this::class.memberProperties) }
 }
 
 val mouseX: Double get() = mc.mouse.x * mc.window.scaledWidth.D / mc.window.width.D

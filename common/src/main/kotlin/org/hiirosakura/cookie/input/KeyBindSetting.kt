@@ -42,13 +42,13 @@ class KeyBindSetting(
 	/**
 	 * 按下多久触发长按
 	 */
-	longPressTime: Long = 20
+	longPressTime: Long = 20,
 ) : JsonData, Copyable<KeyBindSetting>, Matchable {
 
 	/**
 	 * 按下多久触发长按
 	 */
-	var longPressTime: Long = longPressTime
+	var longPressTime: Long = longPressTime.coerceAtLeast(0)
 		set(value) {
 			field = value.coerceAtLeast(0)
 		}

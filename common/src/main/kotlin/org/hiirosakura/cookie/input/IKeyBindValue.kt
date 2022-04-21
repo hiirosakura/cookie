@@ -1,6 +1,6 @@
 package org.hiirosakura.cookie.input
 
-import org.hiirosakura.cookie.common.Initializable
+import org.hiirosakura.cookie.common.Initialization
 
 /**
  *
@@ -16,7 +16,7 @@ import org.hiirosakura.cookie.common.Initializable
  * @author forpleuvoir
 
  */
-interface IKeyBindValue : Initializable {
+interface IKeyBindValue : Initialization {
 
 	fun register() {
 		InputHandler.register(getKeyBind())

@@ -28,11 +28,9 @@ import org.hiirosakura.cookie.util.text
  * @author forpleuvoir
 
  */
-abstract class Button(var text: Text = "".text) : ClickableElement() {
+abstract class Button(var text: () -> Text = { "".text }) : ClickableElement() {
 
-	constructor(text: String = "") : this(text(text))
-
-	override var width: Int = textRenderer.getWidth(text) + 8
+	override var width: Int = textRenderer.getWidth(text()) + 8
 		set(value) {
 			field = value.coerceAtLeast(6)
 		}
@@ -49,7 +47,7 @@ abstract class Button(var text: Text = "".text) : ClickableElement() {
 		val textY = status(y - 1, y - 2, y)
 		drawCenteredText(
 			matrices,
-			text,
+			text(),
 			x,
 			textY,
 			width,
@@ -67,22 +65,12 @@ abstract class Button(var text: Text = "".text) : ClickableElement() {
 }
 
 inline fun ParentElement.button(
-	text: String,
-	width: Int = textRenderer.getWidth(text) + 8,
+	noinline text: () -> Text,
+	width: Int = textRenderer.getWidth(text()) + 8,
 	height: Int = 20,
 	color: Color<out Number> = Color4f.WHITE,
 	noinline onClick: Button.(Int) -> Unit = { },
-	scope: Button.() -> Unit = {}
-): Button = button(text(text), width, height, color, onClick, scope)
-
-
-inline fun ParentElement.button(
-	text: Text,
-	width: Int = textRenderer.getWidth(text) + 8,
-	height: Int = 20,
-	color: Color<out Number> = Color4f.WHITE,
-	noinline onClick: Button.(Int) -> Unit = { },
-	scope: Button.() -> Unit = {}
+	scope: Button.() -> Unit = {},
 ): Button {
 	val button = object : Button(text) {}.apply {
 		this.width = width

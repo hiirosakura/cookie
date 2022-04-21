@@ -88,8 +88,7 @@ object JsonUtil {
 		this.has(key).ifc {
 			try {
 				return this.get(key).asNumber
-			} catch (e: Exception) {
-				e.printStackTrace()
+			} catch (_: Exception) {
 			}
 		}
 		return or
@@ -99,8 +98,7 @@ object JsonUtil {
 		this.has(key).ifc {
 			try {
 				return this.get(key).asBoolean
-			} catch (e: Exception) {
-				e.printStackTrace()
+			} catch (_: Exception) {
 			}
 		}
 		return or
@@ -110,8 +108,7 @@ object JsonUtil {
 		this.has(key).ifc {
 			try {
 				return this.get(key).asString
-			} catch (e: Exception) {
-				e.printStackTrace()
+			} catch (_: Exception) {
 			}
 		}
 		return or

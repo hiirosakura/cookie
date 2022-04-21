@@ -12,6 +12,8 @@ import org.hiirosakura.cookie.util.color.Color4f
 import org.hiirosakura.cookie.util.color.Color4i
 import org.hiirosakura.cookie.util.math.I
 import org.hiirosakura.cookie.util.math.Vector3d
+import java.util.*
+import kotlin.reflect.KProperty
 
 /**
  *
@@ -29,7 +31,9 @@ import org.hiirosakura.cookie.util.math.Vector3d
  */
 abstract class AbstractScreen : AbstractParentElement(), Screen {
 
-	override val remembers: MutableMap<String, Any?> = HashMap()
+	override val rememberValue: MutableMap<String, Any?> = HashMap()
+
+	override val rememberProperties: MutableMap<String, MutableSet<KProperty<*>>> = HashMap()
 
 	override var visible: Boolean = true
 
@@ -55,6 +59,25 @@ abstract class AbstractScreen : AbstractParentElement(), Screen {
 	override val position: Vector3d = Vector3d()
 
 	var backgroundColor: Color<out Number> = Color4f.BLACK.alpha(0.5f)
+
+	private val preInitActions = LinkedList<() -> Unit>()
+	override fun pushPreInitAction(action: () -> Unit) {
+		preInitActions.push(action)
+	}
+
+	override fun getPreInitActions(): List<() -> Unit> {
+		return preInitActions
+	}
+
+	private val initializedAction = LinkedList<() -> Unit>()
+
+	override fun pushInitializedAction(action: () -> Unit) {
+		initializedAction.push(action)
+	}
+
+	override fun getInitializedAction(): List<() -> Unit> {
+		return initializedAction
+	}
 
 	override fun tick() {
 		super<Screen>.tick()
@@ -91,14 +114,16 @@ abstract class AbstractScreen : AbstractParentElement(), Screen {
 				val height = textHeight + bgCornerSize * 2 + padding * 2 + lineSpacing * (warpToLines.size - 1)
 				val canPlace: (Direction) -> Boolean = { dir ->
 					when (dir) {
-						Left -> it.left.I - (width + 3 + margin) > 0
+						Left  -> it.left.I - (width + 3 + margin) > 0
 						Right -> it.right.I + (width + 3 + margin) < this.width
-						Up -> it.top.I - (height + 3 + margin) > 0
-						Down -> it.bottom.I + (height + 3 + margin) < this.height
+						Up    -> it.top.I - (height + 3 + margin) > 0
+						Down  -> it.bottom.I + (height + 3 + margin) < this.height
 					}
 				}
 				val direction: Direction =
-					if (it.tipDirection() != null) it.tipDirection()!! else if (canPlace(Up)) Up else if (canPlace(Right)) Right else if (canPlace(Down)) Down else Left
+					if (it.tipDirection() != null) it.tipDirection()!! else if (canPlace(Up)) Up else if (canPlace(Right)) Right else if (canPlace(
+							Down)
+					) Down else Left
 				setShaderTexture(WIDGET_TEXTURE)
 				enableBlend()
 				defaultBlendFunc()
@@ -108,19 +133,35 @@ abstract class AbstractScreen : AbstractParentElement(), Screen {
 				val shadowColor: Color<out Number> = Color4f.BLACK.alpha(0.3f)
 				//render
 				when (direction) {
-					Left -> {
+					Left  -> {
 						//draw shadow
 						setShaderColor(shadowColor)
 						draw9Texture(
-							matrices, it.left.I - (width + 3 + margin), ((it.bottom.I - (it.height / 2)) - height / 2).clamp(0, this.height - height) + 2,
-							bgCornerSize, width, height, 32, 48, 32, 32
+							matrices,
+							it.left.I - (width + 3 + margin),
+							((it.bottom.I - (it.height / 2)) - height / 2).clamp(0, this.height - height) + 2,
+							bgCornerSize,
+							width,
+							height,
+							32,
+							48,
+							32,
+							32
 						)
 						drawTexture(matrices, it.left.I - (margin + 4), it.bottom.I - (it.height / 2) - 3 + 2, 4, 7, 67, 48, 4, 7)
 						setShaderColor(color)
 						//draw background
 						draw9Texture(
-							matrices, it.left.I - (width + 3 + margin), ((it.bottom.I - (it.height / 2)) - height / 2).clamp(0, this.height - height),
-							bgCornerSize, width, height, 32, 48, 32, 32
+							matrices,
+							it.left.I - (width + 3 + margin),
+							((it.bottom.I - (it.height / 2)) - height / 2).clamp(0, this.height - height),
+							bgCornerSize,
+							width,
+							height,
+							32,
+							48,
+							32,
+							32
 						)
 						//draw arrow
 						drawTexture(matrices, it.left.I - (margin + 4), it.bottom.I - (it.height / 2) - 3, 4, 7, 67, 48, 4, 7)
@@ -155,11 +196,19 @@ abstract class AbstractScreen : AbstractParentElement(), Screen {
 							lineSpacing = lineSpacing
 						)
 					}
-					Up -> {
+					Up    -> {
 						setShaderColor(shadowColor)
 						draw9Texture(
-							matrices, (it.right.I - (it.width / 2) - (width / 2)).clamp(0, this.width - width), it.top.I - (height + 3 + margin) + 2,
-							bgCornerSize, width, height, 32, 48, 32, 32
+							matrices,
+							(it.right.I - (it.width / 2) - (width / 2)).clamp(0, this.width - width),
+							it.top.I - (height + 3 + margin) + 2,
+							bgCornerSize,
+							width,
+							height,
+							32,
+							48,
+							32,
+							32
 						)
 						drawTexture(matrices, (it.right.I - (it.width / 2) - 3), it.top.I - (margin + 4) + 2 + 1, 7, 3, 64, 52, 7, 3)
 						setShaderColor(color)
@@ -177,7 +226,7 @@ abstract class AbstractScreen : AbstractParentElement(), Screen {
 							lineSpacing = lineSpacing
 						)
 					}
-					Down -> {
+					Down  -> {
 						setShaderColor(shadowColor)
 						draw9Texture(
 							matrices, (it.right.I - (it.width / 2) - (width / 2)).clamp(0, this.width - width), it.bottom.I + (3 + margin) + 2,
@@ -219,7 +268,14 @@ abstract class AbstractScreen : AbstractParentElement(), Screen {
 
 }
 
-fun ScreenManager.simpleScreen(screenScope: AbstractScreen.() -> Unit): Screen {
+/**
+ *
+ * 尽量和使用此方法创建screen而不是继承[AbstractScreen]
+ * @receiver ScreenManager
+ * @param screenScope [@kotlin.ExtensionFunctionType] Function1<AbstractScreen, Unit>
+ * @return Screen
+ */
+fun ScreenManager.screen(screenScope: AbstractScreen.() -> Unit): Screen {
 	val screen = object : AbstractScreen() {
 		override fun initialize() {
 			children.clear()

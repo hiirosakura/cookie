@@ -2,10 +2,10 @@ package org.hiirosakura.cookie.gui.texture
 
 import com.google.common.collect.Lists
 import com.google.common.io.CharStreams
+import com.mojang.blaze3d.systems.RenderSystem
 import net.minecraft.resource.ResourceManager
-import org.hiirosakura.cookie.common.Initializable
+import org.hiirosakura.cookie.common.Initialization
 import org.hiirosakura.cookie.common.resourceManager
-import org.hiirosakura.cookie.common.textureManager
 import org.hiirosakura.cookie.util.JsonUtil.parseToJsonObject
 import org.hiirosakura.cookie.util.resources
 import java.io.InputStreamReader
@@ -26,7 +26,7 @@ import java.util.concurrent.CompletableFuture
  * @author forpleuvoir
 
  */
-object GuiTextures : Initializable {
+object GuiTextures : Initialization {
 
 	private val TEXTURE_INFO = resources("texture/gui/cookie_widget.json")
 
@@ -85,7 +85,7 @@ object GuiTextures : Initializable {
 
 	private fun apply() {
 		for (texture in textures) {
-			textureManager.bindTexture(texture.texture)
+			RenderSystem.setShaderTexture(0, texture.texture)
 		}
 	}
 

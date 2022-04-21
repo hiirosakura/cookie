@@ -1,7 +1,7 @@
 package org.hiirosakura.cookie.config
 
 import org.hiirosakura.cookie.api.ModInfo
-import org.hiirosakura.cookie.common.Initializable
+import org.hiirosakura.cookie.common.Initialization
 
 /**
  *
@@ -17,7 +17,7 @@ import org.hiirosakura.cookie.common.Initializable
  * @author forpleuvoir
 
  */
-object ConfigManager : Initializable {
+object ConfigManager : Initialization {
 
 	private val configHandlers: MutableMap<ModInfo, ConfigHandler> = HashMap()
 

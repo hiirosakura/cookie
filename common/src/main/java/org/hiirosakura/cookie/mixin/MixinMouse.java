@@ -42,6 +42,7 @@ public abstract class MixinMouse {
 	@Shadow
 	private double y;
 
+
 	@Inject(method = "onMouseButton", at = @At("HEAD"), cancellable = true)
 	public void onMouseButton(long window, int button, int action, int mods, CallbackInfo ci) {
 		if (window == this.client.getWindow().getHandle()) {

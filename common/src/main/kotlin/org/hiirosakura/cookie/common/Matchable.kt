@@ -16,6 +16,11 @@ package org.hiirosakura.cookie.common
  */
 interface Matchable {
 
+	/**
+	 * 匹配
+	 * @param regex 正则表达式
+	 * @return 是否匹配成功
+	 */
 	infix fun matched(regex: Regex): Boolean
 
 }

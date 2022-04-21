@@ -6,6 +6,7 @@ import org.hiirosakura.cookie.common.mc
 import org.hiirosakura.cookie.gui.foundation.ParentElement
 import org.hiirosakura.cookie.util.ifc
 import org.lwjgl.glfw.GLFW
+import kotlin.reflect.KProperty
 
 /**
  *
@@ -27,7 +28,17 @@ interface Screen : ParentElement {
 
 	var parentScreen: Screen?
 
-	val remembers: MutableMap<String, Any?>
+	val rememberValue: MutableMap<String, Any?>
+
+	val rememberProperties: MutableMap<String, MutableSet<KProperty<*>>>
+
+	fun pushPreInitAction(action: () -> Unit)
+
+	fun getPreInitActions(): List<() -> Unit>
+
+	fun pushInitializedAction(action: () -> Unit)
+
+	fun getInitializedAction(): List<() -> Unit>
 
 	override var parent: ParentElement?
 		get() = this.parentScreen

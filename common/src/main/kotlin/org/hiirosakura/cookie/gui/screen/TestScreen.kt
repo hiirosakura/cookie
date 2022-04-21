@@ -1,5 +1,10 @@
 package org.hiirosakura.cookie.gui.screen
 
+import org.hiirosakura.cookie.gui.foundation.layout.RowLayout
+import org.hiirosakura.cookie.gui.foundation.layout.row
+import org.hiirosakura.cookie.gui.widget.button.button
+import org.hiirosakura.cookie.util.text
+
 /**
  *
 
@@ -14,10 +19,24 @@ package org.hiirosakura.cookie.gui.screen
  * @author forpleuvoir
 
  */
-class TestScreen : AbstractScreen() {
-
-	override fun initialize() {
+fun ScreenManager.testScreen(): Screen =
+	screen {
+		row {
+			button(
+				text = { "test".text },
+				onClick = {
+					println("test")
+				},
+			)
+			group()
+		}
 	}
 
-
+fun RowLayout.group() {
+	button(
+		text = { "test1".text },
+		onClick = {
+			println("test2")
+		}
+	)
 }

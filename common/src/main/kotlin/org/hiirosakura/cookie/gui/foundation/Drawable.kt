@@ -393,6 +393,30 @@ fun Drawable.drawCenteredText(
 	immediate.draw()
 }
 
+
+fun Drawable.drawText(
+	matrices: MatrixStack,
+	text: String,
+	x: Number,
+	y: Number,
+	shadow: Boolean = true,
+	color: Color<out Number> = Color4f.WHITE,
+) {
+	textRenderer.draw(
+		text,
+		x.F,
+		y.F,
+		color.rgba,
+		shadow,
+		matrices.peek().positionMatrix,
+		VertexConsumerProvider.immediate(Tessellator.getInstance().buffer),
+		false,
+		Color4f.WHITE.rgba,
+		LightmapTextureManager.MAX_LIGHT_COORDINATE,
+		false
+	)
+}
+
 fun Drawable.drawStringLines(
 	matrices: MatrixStack,
 	lines: List<String>,
@@ -402,7 +426,7 @@ fun Drawable.drawStringLines(
 	color: Color<out Number> = Color4f.BLACK,
 	shadow: Boolean = false,
 	align: HorizontalAlign = Left,
-	rightToLeft: Boolean = false
+	rightToLeft: Boolean = false,
 ) {
 	val drawText: (text: String, x: Float, y: Float) -> Unit = { text, x, y ->
 		val immediate = VertexConsumerProvider.immediate(Tessellator.getInstance().buffer)

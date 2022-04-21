@@ -36,7 +36,7 @@ class TextLabel(
 ) : AbstractElement() {
 
 	constructor(text: String, width: Int = textRenderer.getWidth(text), height: Int = textRenderer.fontHeight) : this(
-		{ text(text) },
+		{ text.text },
 		width,
 		height
 	)
@@ -140,7 +140,7 @@ inline fun ParentElement.textLabel(
 	backgroundColor: Color<out Number> = Color4i.BLACK.apply { alpha = 0 },
 	bordColor: Color<out Number> = Color4i.BLACK.apply { alpha = 0 },
 	scope: (TextLabel.() -> Unit) = {},
-): TextLabel = textLabel({ text(text) }, width, height, onClick, align, shadow, rightToLeft, backgroundColor, bordColor, scope)
+): TextLabel = textLabel({ text.text }, width, height, onClick, align, shadow, rightToLeft, backgroundColor, bordColor, scope)
 
 
 inline fun ParentElement.textLabel(

@@ -52,6 +52,15 @@ object InputHandler : Tickable {
 	}
 
 	/**
+	 * 按键是否按下
+	 * @param key Int
+	 * @return Boolean
+	 */
+	fun hasKey(key: Int): Boolean {
+		return keys.contains(key)
+	}
+
+	/**
 	 * 检查按键冲突
 	 * @param keyBind KeyBind
 	 * @return List<KeyBind>
@@ -96,6 +105,9 @@ object InputHandler : Tickable {
 		if (keyBinds.isNotEmpty()) keyBinds.forEach { it.tick() }
 	}
 
+	/**
+	 * 释放所有按键
+	 */
 	fun unPressAll() {
 		keys.clear()
 		keyBinds.forEach { it.update(keys) }

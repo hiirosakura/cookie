@@ -27,8 +27,7 @@ class Tip(
 	val screen: Screen,
 ) : Drawable {
 
-	@Deprecated("不要用这个")
-	override fun render(matrices: MatrixStack, delta: Number) {
-	}
+	@Deprecated("不要用这个", ReplaceWith("Unit"))
+	override fun render(matrices: MatrixStack, delta: Number) = Unit
 
 }

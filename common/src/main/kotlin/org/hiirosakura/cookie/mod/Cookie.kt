@@ -1,12 +1,13 @@
 package org.hiirosakura.cookie.mod
 
 import org.hiirosakura.cookie.api.ModInfo
-import org.hiirosakura.cookie.common.Initializable
+import org.hiirosakura.cookie.common.Initialization
 import org.hiirosakura.cookie.common.isDevEnv
 import org.hiirosakura.cookie.gui.foundation.*
 import org.hiirosakura.cookie.gui.foundation.layout.*
 import org.hiirosakura.cookie.gui.screen.ScreenManager.openScreen
-import org.hiirosakura.cookie.gui.screen.simpleScreen
+import org.hiirosakura.cookie.gui.screen.screen
+import org.hiirosakura.cookie.gui.screen.testScreen
 import org.hiirosakura.cookie.gui.widget.button.button
 import org.hiirosakura.cookie.gui.widget.dropMenu
 import org.hiirosakura.cookie.input.InputHandler
@@ -32,7 +33,7 @@ import org.lwjgl.glfw.GLFW
  * @author forpleuvoir
 
  */
-object Cookie : ModInfo, Initializable {
+object Cookie : ModInfo, Initialization {
 
 	override val id: String
 		get() = "cookie"
@@ -44,7 +45,7 @@ object Cookie : ModInfo, Initializable {
 	override fun initialize() {
 		InputHandler.register(KeyBind(GLFW.GLFW_KEY_I) {
 			openScreen {
-				simpleScreen {
+				screen {
 					renderWith = { matrices, delta ->
 						drawCenteredText(matrices, "x:$mouseX,y:$mouseY".text, this.x, this.y, this.width, this.height, false)
 						render.invoke(matrices, delta)
@@ -71,7 +72,7 @@ object Cookie : ModInfo, Initializable {
 							}
 						}
 						row {
-							button("添加", onClick = {
+							button({ "添加".text }, onClick = {
 								list.add("按钮${list.size + 1}")
 							})
 						}
@@ -96,9 +97,9 @@ object Cookie : ModInfo, Initializable {
 							}
 							for (s in list) {
 								button(
-									text = s,
+									text = { s.text },
 									onClick = {
-										println("我是${text.string}")
+										println("我是${text().string}")
 									}
 								) {
 									if (s == "按钮5") tip = {
@@ -126,8 +127,8 @@ object Cookie : ModInfo, Initializable {
 								}
 							}
 							for (s in list) {
-								button(s, onClick = {
-									println("我是${text.string}")
+								button({ s.text }, onClick = {
+									println("我是${text().string}")
 								}) {
 									this.margin.set(Margin(left = 2.0))
 								}
@@ -136,6 +137,7 @@ object Cookie : ModInfo, Initializable {
 					}
 				}
 			}
+			openScreen { testScreen() }
 		})
 	}
 

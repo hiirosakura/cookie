@@ -23,9 +23,6 @@ import java.util.*
 
 val String.text: Text get() = Text.of(this)
 
-fun text(string: String): Text {
-	return Text.of(string)
-}
 
 @JvmName("translatableText")
 fun tText(string: String, vararg args: Any?): TranslatableText {
