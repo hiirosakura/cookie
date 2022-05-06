@@ -50,6 +50,11 @@ interface Screen : ParentElement {
 	val pauseScreen: Boolean get() = false
 
 	/**
+	 * 刷新屏幕
+	 */
+	fun refresh()
+
+	/**
 	 * 关闭当前Screen
 	 */
 	fun close() = onClose().ifc { ScreenManager.setCurrent(this.parentScreen) }

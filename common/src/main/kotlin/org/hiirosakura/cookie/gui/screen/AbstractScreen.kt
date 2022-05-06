@@ -60,7 +60,7 @@ abstract class AbstractScreen : AbstractParentElement(), Screen {
 
 	var backgroundColor: Color<out Number> = Color4f.BLACK.alpha(0.5f)
 
-	private val preInitActions = LinkedList<() -> Unit>()
+	internal val preInitActions = LinkedList<() -> Unit>()
 	override fun pushPreInitAction(action: () -> Unit) {
 		preInitActions.push(action)
 	}
@@ -69,7 +69,7 @@ abstract class AbstractScreen : AbstractParentElement(), Screen {
 		return preInitActions
 	}
 
-	private val initializedAction = LinkedList<() -> Unit>()
+	internal val initializedAction = LinkedList<() -> Unit>()
 
 	override fun pushInitializedAction(action: () -> Unit) {
 		initializedAction.push(action)
@@ -78,6 +78,7 @@ abstract class AbstractScreen : AbstractParentElement(), Screen {
 	override fun getInitializedAction(): List<() -> Unit> {
 		return initializedAction
 	}
+
 
 	override fun tick() {
 		super<Screen>.tick()
@@ -280,6 +281,14 @@ fun ScreenManager.screen(screenScope: AbstractScreen.() -> Unit): Screen {
 		override fun initialize() {
 			children.clear()
 			screenScope()
+			getInitializedAction().forEach { it() }
+			preInitActions.clear()
+			initializedAction.clear()
+		}
+
+		override fun refresh() {
+			getPreInitActions().forEach { it() }
+			initialize()
 		}
 	}
 	return screen

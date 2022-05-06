@@ -224,11 +224,9 @@ interface Element : Drawable, PositionElement, Tickable {
 fun Element.rememberProperty(screen: Screen, key: String, properties: Element.() -> Set<KProperty<*>>) {
 	screen.run {
 		pushPreInitAction {
-			screen.rememberProperties[key] = HashSet(this.properties())
+			screen.rememberProperties[key] = HashSet(this.properties().filter { it in this::class.memberProperties })
 		}
-		pushInitializedAction {
-
-		}
+		
 	}
 
 }
