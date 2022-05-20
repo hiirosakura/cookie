@@ -6,7 +6,6 @@ import org.hiirosakura.cookie.common.mc
 import org.hiirosakura.cookie.gui.foundation.ParentElement
 import org.hiirosakura.cookie.util.ifc
 import org.lwjgl.glfw.GLFW
-import kotlin.reflect.KProperty
 
 /**
  *
@@ -30,8 +29,6 @@ interface Screen : ParentElement {
 
 	val rememberValue: MutableMap<String, Any?>
 
-	val rememberProperties: MutableMap<String, MutableSet<KProperty<*>>>
-
 	fun pushPreInitAction(action: () -> Unit)
 
 	fun getPreInitActions(): List<() -> Unit>
@@ -48,6 +45,8 @@ interface Screen : ParentElement {
 	 * 打开Screen时是否需要暂停游戏
 	 */
 	val pauseScreen: Boolean get() = false
+
+	val tipRenderer: TipRenderer
 
 	/**
 	 * 刷新屏幕

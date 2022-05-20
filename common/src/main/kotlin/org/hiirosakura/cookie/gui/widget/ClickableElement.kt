@@ -36,9 +36,10 @@ abstract class ClickableElement : AbstractElement() {
 		true
 	}
 
-	override var mouseRelease: (mouseX: Number, mouseY: Number, button: Int) -> Boolean = { _, _, _ ->
+	override var mouseRelease: (mouseX: Number, mouseY: Number, button: Int) -> Boolean = { _, _, button ->
 		val b = !pressed
 		if (!b) pressed = false
+		onRelease(button)
 		b
 	}
 

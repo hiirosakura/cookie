@@ -30,6 +30,7 @@ import org.hiirosakura.cookie.util.text
  */
 abstract class Button(var text: () -> Text = { "".text }) : ClickableElement() {
 
+
 	override var width: Int = textRenderer.getWidth(text()) + 8
 		set(value) {
 			field = value.coerceAtLeast(6)
@@ -70,6 +71,7 @@ inline fun ParentElement.button(
 	height: Int = 20,
 	color: Color<out Number> = Color4f.WHITE,
 	noinline onClick: Button.(Int) -> Unit = { },
+	noinline onRelease: Button.(Int) -> Unit = {},
 	scope: Button.() -> Unit = {},
 ): Button {
 	val button = object : Button(text) {}.apply {
@@ -77,6 +79,7 @@ inline fun ParentElement.button(
 		this.height = height
 		this.buttonColor = color
 		this.onClick = { onClick.invoke(this, it) }
+		this.onRelease = { onRelease.invoke(this, it) }
 		this.scope()
 	}
 	this.addElement(button)

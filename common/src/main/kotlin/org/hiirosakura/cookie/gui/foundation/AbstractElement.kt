@@ -77,7 +77,12 @@ abstract class AbstractElement : Element, Modifiable {
 
 	override fun mouseClick(mouseX: Number, mouseY: Number, button: Int): Boolean = mouseClick.invoke(mouseX, mouseY, button)
 
-	open var mouseRelease: (mouseX: Number, mouseY: Number, button: Int) -> Boolean = { _: Number, _: Number, _: Int -> true }
+	open var onRelease: (button: Int) -> Unit = {}
+
+	open var mouseRelease: (mouseX: Number, mouseY: Number, button: Int) -> Boolean = { _: Number, _: Number, button: Int ->
+		onRelease(button)
+		true
+	}
 
 	override fun mouseRelease(mouseX: Number, mouseY: Number, button: Int): Boolean = mouseRelease.invoke(mouseX, mouseY, button)
 

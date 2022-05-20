@@ -19,7 +19,7 @@ import org.hiirosakura.cookie.gui.widget.icon.Icon
  * @author forpleuvoir
 
  */
-open class IconButton(var icon: Icon) : Button("") {
+open class IconButton(var icon: Icon) : Button() {
 
 	override var width: Int = 20
 

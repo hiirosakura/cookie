@@ -7,7 +7,6 @@ import org.hiirosakura.cookie.gui.foundation.*
 import org.hiirosakura.cookie.gui.foundation.layout.*
 import org.hiirosakura.cookie.gui.screen.ScreenManager.openScreen
 import org.hiirosakura.cookie.gui.screen.screen
-import org.hiirosakura.cookie.gui.screen.testScreen
 import org.hiirosakura.cookie.gui.widget.button.button
 import org.hiirosakura.cookie.gui.widget.dropMenu
 import org.hiirosakura.cookie.input.InputHandler
@@ -45,6 +44,7 @@ object Cookie : ModInfo, Initialization {
 	override fun initialize() {
 		InputHandler.register(KeyBind(GLFW.GLFW_KEY_I) {
 			openScreen {
+
 				screen {
 					renderWith = { matrices, delta ->
 						drawCenteredText(matrices, "x:$mouseX,y:$mouseY".text, this.x, this.y, this.width, this.height, false)
@@ -72,7 +72,7 @@ object Cookie : ModInfo, Initialization {
 							}
 						}
 						row {
-							button({ "添加".text }, onClick = {
+							button({ "添加".text }, onRelease = {
 								list.add("按钮${list.size + 1}")
 							})
 						}
@@ -113,6 +113,7 @@ object Cookie : ModInfo, Initialization {
 								}
 							}
 						}
+						var amount by rememberValueOf("amount", 0.0)
 						list(
 							width = 200,
 							height = 40,
@@ -120,6 +121,9 @@ object Cookie : ModInfo, Initialization {
 							padding = Padding(4.0),
 							margin = Margin(4.0)
 						) {
+							scrollerBar.amountConsumer = {
+								amount = it
+							}
 							if (isDevEnv) {
 								renderWith = { matrices, delta ->
 									drawRect(matrices, this.x, this.y, this.width, this.height, Color4f.GREEN.alpha(0.5f))
@@ -133,11 +137,10 @@ object Cookie : ModInfo, Initialization {
 									this.margin.set(Margin(left = 2.0))
 								}
 							}
-						}
+						}.scrollerBar.amount = amount
 					}
 				}
 			}
-			openScreen { testScreen() }
 		})
 	}
 

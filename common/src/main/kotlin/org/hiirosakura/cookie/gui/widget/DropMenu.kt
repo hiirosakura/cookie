@@ -127,7 +127,9 @@ class DropMenu(
 				tipDirection = { itemTipDirection(str) }
 				textColor = Color4f.BLACK
 				renderWith = { matrices, delta ->
-					mouseHover { drawRect(matrices, x, y, this@apply.width - scrollerBar.width, height, Color4f.BLACK.alpha(0.2f)) }
+					mouseHover {
+						drawRect(matrices, x, y - 0.5, this@apply.width - scrollerBar.width, height, Color4f.BLACK.alpha(0.2f))
+					}
 					render.invoke(matrices, delta)
 				}
 			}
